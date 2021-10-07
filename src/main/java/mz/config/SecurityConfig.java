@@ -25,19 +25,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		 	.antMatchers("/sample/admin").access("hasRole('ROLE_ADMIN')")
 		 	.antMatchers("/sample/member").access("hasRole('ROLE_MEMBER')");
 		 	
-		 	//access denied?¸ ê²½ìš° login ?˜?´ì§?ë¡? ?´?™
+		 	//access deniedì¸ê²½ìš° ë¡œê·¸ì¸í˜ì´ì§€ë¡œ
 		 	http.formLogin().loginPage("/login").loginProcessingUrl("/login");
 	}
 	
 	@Override
 	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		log.info("spring security ?‘?™");
+		log.info("spring security ì ìš©");
 		auth.inMemoryAuthentication().withUser("admin").password("{noop}admin").roles("ADMIN");
 		auth.inMemoryAuthentication().withUser("member").password("{noop}member").roles("MEMBER");
 		
 	}
 	
-	//ë¡œê·¸?¸ ?„±ê³µí•˜ë©? ?—¬ê¸°ë¡œ
+	
 	@Bean
 	public AuthenticationSuccessHandler loginSuccessHandler() {
 		return new CustomLoginSuccessHandler();

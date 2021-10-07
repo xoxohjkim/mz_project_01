@@ -48,9 +48,17 @@ $(document).ready(function(){
 		
 		</table>
 	</div>
-	<input type="button" value="수정" id="gnrModifyBtn" onclick='location.href="/form?kind=${kind}&id=${board.id}&act=modify"'>
-	<input type="button" value="삭제" id="gnrDeleteBtn">
+	
 	<div>
+	<c:if test="${board.member.id == loginUser.id }">
+		<input type="button" value="수정" id="gnrModifyBtn" onclick='location.href="/form?kind=${kind}&id=${board.id}&act=modify"'>
+		<input type="button" value="삭제" id="gnrDeleteBtn">
+	</c:if>
+	</div>
+	
+	
+	<div>
+	
 		댓글
 		<table border="1" width="70%">
 			<tr><td>어쩌구</td></tr>

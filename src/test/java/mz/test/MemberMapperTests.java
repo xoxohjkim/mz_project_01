@@ -26,25 +26,28 @@ public class MemberMapperTests {
 	@Autowired
 	private BoardMapper bMapper;
 	
+	
 	@Test
 	public void boardList() {
 		List<Board> list = bMapper.selectBoardByAll();
 		list.stream().forEach(System.out::println);
 	}
 	
-	@Test
+	//@Test
 	public void brgList() {
 		log.info("게시판 종류 list");
 		List<BoardGroup> list = bMapper.selectBoardGroupByAll();
 		list.stream().forEach(System.out::println);
 	}
 	
-	@Test
+	//@Test
 	public void brgById() {
 		log.info("게시판 종류 list by brg");
 		List<Board> list = bMapper.selectBoardByGroup(1);
 		list.stream().forEach(System.out::println);
 	}
+	
+
 	
 }
  

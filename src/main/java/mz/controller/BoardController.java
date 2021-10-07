@@ -1,16 +1,23 @@
 package mz.controller;
 
+import java.io.IOException;
+import java.io.Reader;
+import java.nio.charset.Charset;
 import java.util.List;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import org.apache.ibatis.io.Resources;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -18,11 +25,10 @@ import org.springframework.web.servlet.ModelAndView;
 import lombok.extern.log4j.Log4j;
 import mz.dto.Board;
 import mz.dto.BoardGroup;
-import mz.dto.Criteria;
 import mz.dto.Member;
 import mz.dto.PageMaker;
+import mz.dto.SearchCriteria;
 import mz.service.BoardService;
-import oracle.net.aso.b;
 
 @Log4j
 @Controller
@@ -38,41 +44,60 @@ public class BoardController {
 	}
 	//게시판 리스트
 	@GetMapping("/board")
-	public ModelAndView list(Criteria cri, @Nullable @RequestParam("kind") String kind, @Nullable @RequestParam("id") String id) {
-		log.info("board list");
-
-		PageMaker pageMaker = new PageMaker();
-		pageMaker.setCri(cri);
-		cri.setPerPageNum(10);
+	//@RequestMapping(value = "/board", method = RequestMethod.GET, produces = "application/text;charset=UTF-8")
+	public ModelAndView list(SearchCriteria cri, @Nullable @RequestParam String kind, @Nullable @RequestParam String id,
+										@Nullable @RequestParam String cond, @Nullable @RequestParam String keyword) throws IOException {
 		
-		System.out.println(pageMaker);
+		HttpHeaders responseHeaders = new HttpHeaders(); 
+		responseHeaders.add("Content-Type", "text/html; charset=utf-8");
+	
+		log.info("board list");
+		PageMaker pageMaker = new PageMaker();
+		
+		pageMaker.setCri(cri);
+		
 		ModelAndView mv = new ModelAndView();
 		
 		BoardGroup bg = service.getBoardByGroupKey(kind);
 		
+		List<Board> list = null;
 		
 		if(kind != null) {
-			//id 있을 시 글 상세 
+			
 			if(id != null) {
-				//List<Board> list = service.selectBoardByGroup(bg.getId());
-				List<Board> list = service.pagingSelectBoardByAll(cri);
-				int num = service.countSelectBoardByAll();
-				pageMaker.setTotalCount(num);
+				log.info("게시글 상세");
+				
+				list = service.selectBoardByGroup(bg.getId());
 				Board board = service.selectBoardById(Integer.parseInt(id));
 				mv.addObject("board", board);
-				mv.addObject("list", list);
 				mv.setViewName(kind + "_board/" + kind + "_board_detail");
 				
 			}else {	
+				log.info("게시글 리스트");
+				
 				// board?kind=gnr
 				// key로 board group의 id
-				List<Board> list = service.selectBoardByGroup(bg.getId());
-				System.out.println(list);
-				mv.addObject("list", list);
+				list = service.pagingSelectBoardByAll(cri, String.valueOf(bg.getId()), cond, keyword);
+				pageMaker.setTotalCount(service.countSelectBoardByAll(cri, String.valueOf(bg.getId()), cond, keyword));
+		
+				
+				System.out.println("몇개?" + service.countSelectBoardByAll(cri, String.valueOf(bg.getId()), cond, keyword));
+				for(Board b : list) {
+					System.out.println(b);
+				}
+				
+				System.out.println("cri : " + cri);
+				System.out.println(cri.getRowStart() + " / " + cri.getRowEnd());
+				
+				mv.addObject("totalCnt", service.countSelectBoardByAll(cri, String.valueOf(bg.getId()), cond, keyword));
+				
 				mv.setViewName(kind + "_board/" + kind + "_board_list");
+				
 			}
 		}
-		
+		mv.addObject("cond", cond);
+		mv.addObject("keyword", keyword);
+		mv.addObject("list", list);
 		mv.addObject("kind", kind);
 		mv.addObject("pageMaker", pageMaker);
 		

@@ -6,7 +6,7 @@ public class Criteria {
 	private int rowStart;
 	private int rowEnd;
 
-	public final static int DEFAULT_PERPAGE_NUM = 20;
+	public final static int DEFAULT_PERPAGE_NUM = 10;
 	
 	public Criteria() {
 		this.page = 1;

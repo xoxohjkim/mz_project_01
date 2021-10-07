@@ -9,6 +9,7 @@ import lombok.extern.log4j.Log4j;
 import mz.dto.Board;
 import mz.dto.BoardGroup;
 import mz.dto.Criteria;
+import mz.dto.SearchCriteria;
 import mz.mapper.BoardMapper;
 import mz.service.BoardService;
 
@@ -66,13 +67,13 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public List<Board> pagingSelectBoardByAll(Criteria cri) {
-		return mapper.pagingSelectBoardByAll(cri);
+	public List<Board> pagingSelectBoardByAll(SearchCriteria cri, String id, String cond, String keyword) {
+		return mapper.pagingSelectBoardByAll(cri, id, cond, keyword);
 	}
 
 	@Override
-	public int countSelectBoardByAll() {
-		return mapper.countSelectBoardByAll();
+	public int countSelectBoardByAll(SearchCriteria cri,String id, String cond, String keyword) {
+		return mapper.countSelectBoardByAll(cri, id, cond, keyword);
 	}
 
 	

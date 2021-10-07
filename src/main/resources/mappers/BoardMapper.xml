@@ -23,6 +23,7 @@
 	<resultMap type="mz.dto.Board" id="boardResult">
 		<id column="brd_id" property="id" />
 		<result column="brd_title" property="title" />
+		<result column="mem_nickname" property="member.nickname"/>
 		<result column="brd_content" property="content" />
 		<result column="brd_hit" property="hit" />
 		<result column="regdate" property="regDate" />
@@ -48,25 +49,49 @@
 	
 <!-- paging -->
 	
-	<select id="pagingSelectBoardByAll">
+	<select id="pagingSelectBoardByAll" resultMap="boardResult">
 		SELECT A.*
-		FROM (SELECT ROWNUM AS RNUM, B.*
-			FROM (
-				SELECT brd_id, 
+			FROM (SELECT ROWNUM AS RNUM, B.*
+				FROM (SELECT brd_id, 
 						bgr_id, 
 						mem_id, 
+						mem_nickname,
 						brd_title, 
 						brd_content, 
 						brd_hit, 
 						regdate 
-						FROM board where bgr_id = #{bgr.id} 
+						FROM board where bgr_id = #{id} 
+							<if test = 'cond != null and cond.equals("brd_title")'>
+								and brd_title like '%' || #{keyword} || '%'
+							</if> 
+							<if test = 'cond != null and cond.equals("mem_nickname")'>
+								and mem_nickname like '%' || #{keyword} || '%'
+							</if> 
 							ORDER BY REGDATE desc )B)A
 			WHERE A.RNUM BETWEEN #{cri.rowStart} AND #{cri.rowEnd}
 				ORDER BY A.RNUM
 	</select>
 	
 	<select id="countSelectBoardByAll" resultType="int">
-		SELECT COUNT(*) FROM board;
+		SELECT count(a.brd_id)
+			FROM (SELECT ROWNUM AS RNUM, B.*
+				FROM (SELECT brd_id, 
+						bgr_id, 
+						mem_id, 
+						mem_nickname,
+						brd_title, 
+						brd_content, 
+						brd_hit, 
+						regdate
+				FROM board where bgr_id = #{id} 
+					<if test = 'cond != null and cond.equals("brd_title")'>
+								and brd_title like '%' || #{keyword} || '%'
+							</if> 
+							<if test = 'cond != null and cond.equals("mem_nickname")'>
+								and mem_nickname like '%' || #{keyword} || '%'
+							</if> 
+			)B)A
+			
 	</select>
 	
 <!-- 게시판  -->
@@ -105,8 +130,8 @@
 <!-- insert -->
 
 	<insert id="insertGnrBoard" parameterType="mz.dto.Board">
-		insert into board(brd_id, bgr_id, mem_id, brd_title, brd_content) 
-		values ( brd_seq.nextval, #{bgr.id}, #{member.id}, #{title}, #{content} )
+		insert into board(brd_id, bgr_id, mem_id, mem_nickname, brd_title, brd_content) 
+		values ( brd_seq.nextval, #{bgr.id}, #{member.id}, #{member.nickname}, #{title}, #{content} )
 	</insert>
 	
 <!-- update -->

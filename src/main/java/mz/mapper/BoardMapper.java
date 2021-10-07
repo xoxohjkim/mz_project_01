@@ -4,14 +4,15 @@ import java.util.List;
 
 import org.apache.ibatis.annotations.Param;
 
+import lombok.experimental.PackagePrivate;
 import mz.dto.Board;
 import mz.dto.BoardGroup;
 import mz.dto.Criteria;
 
 public interface BoardMapper {
 	
-	List<Board> pagingSelectBoardByAll(@Param("cri")Criteria cri);
-	int countSelectBoardByAll();
+	List<Board> pagingSelectBoardByAll(@Param("cri")Criteria cri, @Param("id")String id, @Param("cond") String cond, @Param("keyword") String keyword);
+	int countSelectBoardByAll(@Param("cri") Criteria cri, @Param("id")String id, @Param("cond") String cond, @Param("keyword")String keyword);
 	
 	
 	List<Board> selectBoardByAll();

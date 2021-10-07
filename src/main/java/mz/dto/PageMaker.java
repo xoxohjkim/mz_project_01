@@ -72,30 +72,21 @@ public class PageMaker {
 
 	public String makeQuery(int page) {
 		UriComponents uriComponents = UriComponentsBuilder.newInstance().queryParam("page", page)
-				.queryParam("perPageNum", cri.getPerPageNum()).build();
+				.build();
 
 		return uriComponents.toUriString();
 	}
 	
-//	public String makeSearch(int page) {
-//		SearchCriteria scri = (SearchCriteria) cri;
-//		UriComponentsBuilder builder = 
-//			UriComponentsBuilder.newInstance()
-//			.queryParam("searchType", scri.getSearchType())
-//			.queryParam("keyword", scri.getKeyword())
-//			.queryParam("startDate", scri.getStartDate())
-//			.queryParam("endDate", scri.getEndDate())
-//			.queryParam("page", page)
-//			.queryParam("perPageNum", scri.getPerPageNum());
-//		
-//		if(scri.getParams() != null) {
-//			for( String key : scri.getParams().keySet() ){
-//	            builder.queryParam(key, scri.getParams().get(key));
-//	        }
-//		}
-//
-//		return builder.build().toString();
-//	}
+	public String makeSearch(int page){
+		SearchCriteria scri = (SearchCriteria) cri;
+		UriComponentsBuilder builder = 
+			UriComponentsBuilder.newInstance()
+			.queryParam("cond", scri.getCond())
+			.queryParam("keyword", scri.getKeyword())
+			.queryParam("page", page);
+
+		return builder.build().toString();
+	}
 	
 	
 	private String encoding(String keyword) {

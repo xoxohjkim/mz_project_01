@@ -31,11 +31,11 @@ public class RootConfig {
 		//hikari.setJdbcUrl("jdbc:oracle:thin:@localhost:1521:orcl");
 		hikari.setDriverClassName("net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
 		
-		//ì§?
-		//hikari.setJdbcUrl("jdbc:log4jdbc:oracle:thin:@localhost:1521:orcl");
+		//ì§‘
+		hikari.setJdbcUrl("jdbc:log4jdbc:oracle:thin:@localhost:1521:orcl?useUnicode=true&characterEncoding=UTF-8");
 		
-		//?šŒ?‚¬
-		hikari.setJdbcUrl("jdbc:log4jdbc:oracle:thin:@localhost:1521:xe");
+		//ã„´íšŒì‚¬
+		//hikari.setJdbcUrl("jdbc:log4jdbc:oracle:thin:@localhost:1521:xe");
 		hikari.setUsername("hjkim");
 		hikari.setPassword("rootroot");
 		

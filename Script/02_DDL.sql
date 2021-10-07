@@ -58,11 +58,13 @@ create table board (
 	brd_id NUMBER(12) NOT NULL, /* PK */
 	bgr_id NUMBER(12) NOT NULL,/* 게시판 종류 - fk */
 	mem_id varchar2(20) NOT NULL, /* 글쓴이 - fk  */
+	mem_nickname varchar2(20) not null, /*쓴사람 닉네임 -> 검색용이*/
 	brd_title varchar(200) NOT NULL, /* 제목 */
 	brd_content varchar2(4000) NOT NULL,/* 내용 */
 	brd_hit NUMBER(12) default 0 NOT NULL, /* 조회수*/
 	regdate DATE default sysdate NOT NULL /* 등록일 */
 )SEGMENT CREATION IMMEDIATE;
+
 
 ALTER TABLE BOARD ADD CONSTRAINT PK_BOARD PRIMARY KEY (brd_id);
 
