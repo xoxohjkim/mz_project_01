@@ -2,6 +2,7 @@ package mz.config;
 
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.util.ResizableByteArrayOutputStream;
 import org.springframework.web.servlet.config.annotation.DefaultServletHandlerConfigurer;
 import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
@@ -25,14 +26,11 @@ public class ServletConfig implements WebMvcConfigurer {
 	}
 	
 	
-	//컨트롤러 구현 ?��?�� 매핑
+	//컨트롤러 구현 없는 매핑
 	@Override
 	public void addViewControllers(ViewControllerRegistry registry) {
-		registry.addViewController("/").setViewName("gnr_board");
-		registry.addViewController("/main").setViewName("gnr_board");
-		registry.addViewController("/gnr_board").setViewName("gnr_board");
-		registry.addViewController("/img_board").setViewName("img_board");
-		registry.addViewController("/mypage").setViewName("mypage");
+		registry.addViewController("/").setViewName("gnr_board/gnr_board_list");
+		registry.addViewController("mypage").setViewName("mypage");
 	}
 	
     @Override

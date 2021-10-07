@@ -3,7 +3,7 @@ DROP TABLE board_group CASCADE CONSTRAINTS;
 DROP TABLE board_cate CASCADE CONSTRAINTS;
 DROP TABLE board CASCADE CONSTRAINTS;
 DROP TABLE board_comment CASCADE CONSTRAINTS;
-DROP TABLE image CASCADE CONSTRAINTS;
+DROP TABLE img_file CASCADE CONSTRAINTS;
 
 
 /* 회원 */
@@ -60,7 +60,7 @@ create table board (
 	mem_id varchar2(20) NOT NULL, /* 글쓴이 - fk  */
 	brd_title varchar(200) NOT NULL, /* 제목 */
 	brd_content varchar2(4000) NOT NULL,/* 내용 */
-	brd_hit NUMBER(12) NOT NULL, /* 조회수*/
+	brd_hit NUMBER(12) default 0 NOT NULL, /* 조회수*/
 	regdate DATE default sysdate NOT NULL /* 등록일 */
 )SEGMENT CREATION IMMEDIATE;
 

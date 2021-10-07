@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="mz.mappers.BoardMapper">
+<mapper namespace="mz.mapper.BoardMapper">
 	
 <!-- resultMap -->
 
@@ -17,7 +17,7 @@
 		<result column="brd_parent" property="parentId" />
 		<result column="brd_cate_order" property="order" />
 		
-		<association column="bgr_id" property="bgr" select="selectBgrById" fetchType="lazy"/>
+		<association column="bgr_id" property="bgr" select="selectBoardGroupById" fetchType="lazy"/>
 	</resultMap>
 	
 	<resultMap type="mz.dto.Board" id="boardResult">
@@ -28,7 +28,7 @@
 		<result column="regdate" property="regDate" />
 		
 		<association column="mem_id" property="member" select="mz.mapper.MemberMapper.selectMemberById" fetchType="lazy"/>
-		<association column="bgr_id" property="bgr" select="selectBgrById" fetchType="lazy"/>
+		<association column="bgr_id" property="bgr" select="selectBoardGroupById" fetchType="lazy"/>
 	</resultMap>
 
 
@@ -47,19 +47,58 @@
 	</sql>
 	
 	
-<!-- query  -->
+<!-- 게시판  -->
 	<select id="selectBoardByAll" resultMap="boardResult">
 		<include refid="boardSelectSql"></include>
 	</select>
 	
-	<select id = "selectBgrById" resultMap="bgrResult">
-		<include refid="bgrSelectSql"></include>
-		 where bgr_id = #{id}
-	</select>
-	
-	<select id = "selectBoardByGroup" resultMap="boardResult">
+	<select id = "selectBoardByGroup" resultMap="boardResult" >
 		<include refid="boardSelectSql"></include>
 		where bgr_id = #{bgr.id}
 	</select>
+	
+	<select id ="getBoardByGroupKey" resultMap="bgrResult">
+		<include refid="bgrSelectSql"></include>
+		where bgr_key like '' || #{key} || ''
+	</select>
+	
+	<select id = "selectBoardById" resultMap="boardResult">
+		<include refid="boardSelectSql"></include>
+		where brd_id = #{id}
+	</select>
+	
 
+	
+
+<!-- 게시판 종류 -->
+	<select id="selectBoardGroupByAll" resultMap="bgrResult">
+		<include refid="bgrSelectSql"></include>
+	</select>
+	
+	<select id ="selectBoardGroupById" resultMap="bgrResult" >
+		<include refid="bgrSelectSql"></include>
+		 where bgr_id = #{id}
+	</select>
+
+<!-- insert -->
+
+	<insert id="insertGnrBoard" parameterType="mz.dto.Board">
+		insert into board(brd_id, bgr_id, mem_id, brd_title, brd_content) 
+		values ( brd_seq.nextval, #{bgr.id}, #{member.id}, #{title}, #{content} )
+	</insert>
+	
+<!-- update -->
+	<update id="updateGnrBoard" >
+		update board
+			<set>
+				<if test = "title != null"> title = #{title}</if>
+				<if test = "content != null"> content = #{content}</if>
+			</set>
+		where brd_id = #{id}
+	</update>
+	
+<!-- delete -->
+	<delete id="deleteGnrBoard">
+		delete from board where brd_id = #{id}
+	</delete>
 </mapper>

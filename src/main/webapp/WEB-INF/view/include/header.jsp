@@ -8,6 +8,7 @@
 <meta charset="UTF-8">
 <title>Hello</title>
 <script src="https://code.jquery.com/jquery-3.6.0.js"  integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
+
 </head>
 <body>
 <header>
@@ -29,8 +30,8 @@
 	</c:if>
 	
 <div>
-	<a href="<c:url value="/gnr_board" />"> 자유</a>
-	<a href="<c:url value="/img_board" />"> 이미지</a>
+	<a href="<c:url value="/board?kind=gnr" />"> 자유</a>
+	<a href="<c:url value="/board?kind=img" />"> 이미지</a>
 </div>
 
 

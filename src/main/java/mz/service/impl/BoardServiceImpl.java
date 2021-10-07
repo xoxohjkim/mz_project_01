@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import lombok.extern.log4j.Log4j;
 import mz.dto.Board;
+import mz.dto.BoardGroup;
 import mz.mapper.BoardMapper;
 import mz.service.BoardService;
 
@@ -25,8 +26,50 @@ public class BoardServiceImpl implements BoardService {
 
 	@Override
 	public List<Board> selectBoardByAll() {
-		List<Board> list = mapper.selectBoardByAll();
-		return list;
+		return mapper.selectBoardByAll();
 	}
+	
+	@Override
+	public Board selectBoardById(int id) {
+		return mapper.selectBoardById(id);
+	}
+
+	@Override
+	public List<BoardGroup> getBoardGroupList() {
+		return mapper.selectBoardGroupByAll();
+	}
+
+	@Override
+	public List<BoardGroup> getBoardGroupListById(int bgrId) {
+		return mapper.selectBoardGroupById(bgrId);
+	}
+
+	@Override
+	public int insertGnrBoard(Board board) {
+		return mapper.insertGnrBoard(board);
+	}
+
+	@Override
+	public BoardGroup getBoardByGroupKey(String key) {
+		return mapper.getBoardByGroupKey(key);
+	}
+
+	@Override
+	public int modifyGnrBoard(int id) {
+		// TODO Auto-generated method stub
+		return mapper.updateGnrBoard(id);
+	}
+
+	@Override
+	public int deleteGnrBoard(int id) {
+		// TODO Auto-generated method stub
+		return mapper.deleteGnrBoard(id);
+	}
+
+	
+
+	
+	
+	
 
 }

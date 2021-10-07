@@ -50,12 +50,12 @@ public class LoginController {
 			//boolean pwMatch = passwordEncoder.matches(pwd, member.getPwd());
 			//log.info("pwMatches:" + pwMatch);
 				session.setAttribute("loginUser", member);
-				log.info("ë¡œê·¸?¸?„±ê³?");
+				log.info("ë¡œê·¸ì¸ ì™„ë£Œ");
 				return 1;
 			
 		} else {
-			log.info("ë¡œê·¸?¸ ?‹¤?Œ¨");
-			request.setAttribute("msg", "?•„?´?””?‚˜ ë¹„ë?ë²ˆí˜¸ê°? ë§ì? ?•Š?Šµ?‹ˆ?‹¤.");
+			log.info("ë¡œê·¸ì¸ ë¶ˆê°€");
+			request.setAttribute("msg", "ì•„ì´ë””ë‚˜ ë¹„ë°€ë²ˆí˜¸ë¥¼ í™•ì¸í•´ì£¼ì„¸ìš”.");
 			return 0;
 		}
 	
@@ -65,13 +65,13 @@ public class LoginController {
 	@GetMapping("/logout")
 	public String logout(HttpSession session) {
 		session.removeAttribute("loginUser");
-		log.info("ë¡œê·¸?•„?›ƒ");
+		log.info("ë¡œê·¸ì•„ì›ƒ");
 		return "redirect:/main";
 	}
 	
 	@GetMapping("/register")
 	public String register() {
-		log.info("?šŒ?›ê°??… form");
+		log.info("íšŒì›ê°€ì… form");
 		return "register";
 	}
 	

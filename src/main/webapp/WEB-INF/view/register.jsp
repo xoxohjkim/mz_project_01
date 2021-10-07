@@ -2,19 +2,19 @@
 <%@ include file="/WEB-INF/view/include/header.jsp" %>
 
 <script>
-	$(document).ready(function(){
+$(document).ready(function(){
 		
 		
 		$('#registerBtn').click(function(){
 			
-			var newMember = {
+			/* var newMember = {
 					id : $('#id').val(),
 					pwd : $('#pwd').val(),
 					email : $('#email').val(),
 					name : $('#name').val(),
 					nickname : $('#nickname').val(),
 			};
-			console.log(newMember);
+			console.log(newMember); */
 			//JSON.stringify(newMember)
 			
 			$.ajax({
