@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import lombok.extern.log4j.Log4j;
 import mz.dto.Board;
 import mz.dto.BoardGroup;
+import mz.dto.Criteria;
 import mz.mapper.BoardMapper;
 import mz.service.BoardService;
 
@@ -55,15 +56,23 @@ public class BoardServiceImpl implements BoardService {
 	}
 
 	@Override
-	public int modifyGnrBoard(int id) {
-		// TODO Auto-generated method stub
-		return mapper.updateGnrBoard(id);
+	public int modifyGnrBoard(Board board) {
+		return mapper.updateGnrBoard(board);
 	}
 
 	@Override
-	public int deleteGnrBoard(int id) {
-		// TODO Auto-generated method stub
-		return mapper.deleteGnrBoard(id);
+	public int deleteGnrBoard(Board board) {
+		return mapper.deleteGnrBoard(board);
+	}
+
+	@Override
+	public List<Board> pagingSelectBoardByAll(Criteria cri) {
+		return mapper.pagingSelectBoardByAll(cri);
+	}
+
+	@Override
+	public int countSelectBoardByAll() {
+		return mapper.countSelectBoardByAll();
 	}
 
 	

@@ -46,6 +46,28 @@
 		select brd_id, bgr_id, mem_id, brd_title, brd_content, brd_hit, regdate from board
 	</sql>
 	
+<!-- paging -->
+	
+	<select id="pagingSelectBoardByAll">
+		SELECT A.*
+		FROM (SELECT ROWNUM AS RNUM, B.*
+			FROM (
+				SELECT brd_id, 
+						bgr_id, 
+						mem_id, 
+						brd_title, 
+						brd_content, 
+						brd_hit, 
+						regdate 
+						FROM board where bgr_id = #{bgr.id} 
+							ORDER BY REGDATE desc )B)A
+			WHERE A.RNUM BETWEEN #{cri.rowStart} AND #{cri.rowEnd}
+				ORDER BY A.RNUM
+	</select>
+	
+	<select id="countSelectBoardByAll" resultType="int">
+		SELECT COUNT(*) FROM board;
+	</select>
 	
 <!-- 게시판  -->
 	<select id="selectBoardByAll" resultMap="boardResult">
@@ -91,8 +113,8 @@
 	<update id="updateGnrBoard" >
 		update board
 			<set>
-				<if test = "title != null"> title = #{title}</if>
-				<if test = "content != null"> content = #{content}</if>
+				<if test = "title != null"> brd_title = #{title},  </if>
+				<if test = "content != null"> brd_content = #{content}</if>
 			</set>
 		where brd_id = #{id}
 	</update>

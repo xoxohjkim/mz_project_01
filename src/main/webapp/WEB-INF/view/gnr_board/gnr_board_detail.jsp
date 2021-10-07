@@ -1,6 +1,37 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/view/include/header.jsp" %>
 
+<script>
+$(document).ready(function(){
+	
+	console.log(${board.id})
+	
+	$('#gnrDeleteBtn').click(function(){
+		 if (confirm("게시물을 삭제하시겠습니까?")) {
+			 $.ajax({
+					url : "/form/${kind}/delete/${board.id}" ,
+					type:'POST',
+					data: $('#doGnrWrite').serialize(),
+					success:function(res){
+						if(res == 1){
+							window.location.href='/board?kind=${kind}'
+						}
+					},
+					error: function(request,status,error){
+						alert('에러' + request.status+request.responseText+error);
+						console.log(error);
+					}
+				});
+		 } else {
+			 
+		 }
+	});
+	
+	
+	 
+});
+</script>
+
 	<div>
 		<table border="1" width="70%">
 			<tr>
@@ -18,7 +49,7 @@
 		</table>
 	</div>
 	<input type="button" value="수정" id="gnrModifyBtn" onclick='location.href="/form?kind=${kind}&id=${board.id}&act=modify"'>
-	<input type="button" value="삭제" id="gnrDeleteBtn" onclick='location.href="/form?kind=${kind}id=${board.id}&act=delete"'>
+	<input type="button" value="삭제" id="gnrDeleteBtn">
 	<div>
 		댓글
 		<table border="1" width="70%">

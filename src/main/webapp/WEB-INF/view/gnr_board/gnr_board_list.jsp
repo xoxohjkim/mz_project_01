@@ -36,4 +36,27 @@
 		</tbody>
 </table>
 
-<input type="button" value="글쓰기" onclick='location.href="/form?kind=${kind}&act=write"'>
+<c:if test="${loginUser != null }">
+	<input type="button" value="글쓰기" onclick='location.href="/form?kind=${kind}&act=write"'>	
+</c:if>
+
+
+	<div>
+		    <c:if test="${pageMaker.prev}">
+		    	<p><a href="form?kind=${kind}&act=write&${pageMaker.makeQuery(pageMaker.startPage - 1)}">이전</a></p>
+		    </c:if> 
+			<ul>
+			
+			  <c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="idx">
+			  	<li><a href="<%=request.getContextPath()%>/form?kind=${kind}&act=write&${pageMaker.makeQuery(idx)}">${idx}</a></li>
+			  </c:forEach>
+			</ul>
+			
+			  <c:if test="${pageMaker.next && pageMaker.endPage > 0}">
+			  	
+			    <p><a href="<%=request.getContextPath()%>form?kind=${kind}&act=write&${pageMaker.makeQuery(pageMaker.endPage + 1)}">다음</a></p>
+			  </c:if>
+			
+		</div>
+		
+		${pageMaker.cri.rowStart}

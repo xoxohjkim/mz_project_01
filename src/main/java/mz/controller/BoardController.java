@@ -18,7 +18,9 @@ import org.springframework.web.servlet.ModelAndView;
 import lombok.extern.log4j.Log4j;
 import mz.dto.Board;
 import mz.dto.BoardGroup;
+import mz.dto.Criteria;
 import mz.dto.Member;
+import mz.dto.PageMaker;
 import mz.service.BoardService;
 import oracle.net.aso.b;
 
@@ -36,9 +38,14 @@ public class BoardController {
 	}
 	//게시판 리스트
 	@GetMapping("/board")
-	public ModelAndView list(@Nullable @RequestParam("kind") String kind, @Nullable @RequestParam("id") String id) {
+	public ModelAndView list(Criteria cri, @Nullable @RequestParam("kind") String kind, @Nullable @RequestParam("id") String id) {
 		log.info("board list");
+
+		PageMaker pageMaker = new PageMaker();
+		pageMaker.setCri(cri);
+		cri.setPerPageNum(10);
 		
+		System.out.println(pageMaker);
 		ModelAndView mv = new ModelAndView();
 		
 		BoardGroup bg = service.getBoardByGroupKey(kind);
@@ -47,7 +54,10 @@ public class BoardController {
 		if(kind != null) {
 			//id 있을 시 글 상세 
 			if(id != null) {
-				List<Board> list = service.selectBoardByGroup(bg.getId());
+				//List<Board> list = service.selectBoardByGroup(bg.getId());
+				List<Board> list = service.pagingSelectBoardByAll(cri);
+				int num = service.countSelectBoardByAll();
+				pageMaker.setTotalCount(num);
 				Board board = service.selectBoardById(Integer.parseInt(id));
 				mv.addObject("board", board);
 				mv.addObject("list", list);
@@ -64,6 +74,7 @@ public class BoardController {
 		}
 		
 		mv.addObject("kind", kind);
+		mv.addObject("pageMaker", pageMaker);
 		
 		return mv;
 		
@@ -131,18 +142,18 @@ public class BoardController {
 		
 		log.info("현재 로그인 - " + loginUser);
 		
-		BoardGroup bgr = service.getBoardByGroupKey(kind);
 		Board b = service.selectBoardById(id);
+		
 		int res = 0;
 		if(act.equals("modify")) {
 			log.info("게시물 수정");
 			b.setTitle(board.getTitle());
-			b.setTitle(board.getContent());
-			res = service.modifyGnrBoard(id);
+			b.setContent(board.getContent());
+			res = service.modifyGnrBoard(board);
 			
 		}else if(act.equals("delete")) {
 			log.info("게시물 삭제");
-			res = service.deleteGnrBoard(id);
+			res = service.deleteGnrBoard(board);
 		}
 		System.out.println(board);
 		

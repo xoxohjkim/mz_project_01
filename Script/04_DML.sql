@@ -24,7 +24,16 @@ insert into board_group(bgr_id, bgr_key, bgr_name) values (brd_group_seq.nextval
 select brd_id, bgr_id, mem_id, brd_title, brd_content, brd_hit, regdate from board;
 insert into board(brd_id, bgr_id, mem_id, brd_title, brd_content) 
 		values ( brd_seq.nextval, 1,'test', '제목', '내용');
-update board set 
+insert into board(brd_id, bgr_id, mem_id, brd_title, brd_content, brd_hit) values (brd_seq.nextval, 1, 'test', '안녕하세용1', '내용1', 0);
+insert into board(brd_id, bgr_id, mem_id, brd_title, brd_content, brd_hit) values (brd_seq.nextval, 1, 'test', '안녕하세용2', '내용2', 0);
+insert into board(brd_id, bgr_id, mem_id, brd_title, brd_content, brd_hit) values (brd_seq.nextval, 1, 'test11', '안녕하세용3', '내용3', 0);
+insert into board(brd_id, bgr_id, mem_id, brd_title, brd_content, brd_hit) values (brd_seq.nextval, 2, 'test11', '안녕하세용4', '내용4', 0);
+insert into board(brd_id, bgr_id, mem_id, brd_title, brd_content, brd_hit) values (brd_seq.nextval, 2, 'test11', '안녕하세용5', '내용5', 0);
+insert into board(brd_id, bgr_id, mem_id, brd_title, brd_content, brd_hit) values (brd_seq.nextval, 1, 'test', '안녕하세용1', '내용1', 0);
+insert into board(brd_id, bgr_id, mem_id, brd_title, brd_content, brd_hit) values (brd_seq.nextval, 1, 'test', '안녕하세용2', '내용2', 0);
+insert into board(brd_id, bgr_id, mem_id, brd_title, brd_content, brd_hit) values (brd_seq.nextval, 1, 'test11', '안녕하세용3', '내용3', 0);
+insert into board(brd_id, bgr_id, mem_id, brd_title, brd_content, brd_hit) values (brd_seq.nextval, 2, 'test11', '안녕하세용4', '내용4', 0);
+insert into board(brd_id, bgr_id, mem_id, brd_title, brd_content, brd_hit) values (brd_seq.nextval, 2, 'test11', '안녕하세용5', '내용5', 0);
 insert into board(brd_id, bgr_id, mem_id, brd_title, brd_content, brd_hit) values (brd_seq.nextval, 1, 'test', '안녕하세용1', '내용1', 0);
 insert into board(brd_id, bgr_id, mem_id, brd_title, brd_content, brd_hit) values (brd_seq.nextval, 1, 'test', '안녕하세용2', '내용2', 0);
 insert into board(brd_id, bgr_id, mem_id, brd_title, brd_content, brd_hit) values (brd_seq.nextval, 1, 'test11', '안녕하세용3', '내용3', 0);
