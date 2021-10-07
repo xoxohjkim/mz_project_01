@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mz.mapper.MemberMapper">	
+
+	<sql id = "selectSql">
+		select id,
+				pwd, 
+				name, 
+				nickname, 
+				email, 
+				auth_key, 
+				auth_state, 
+				use_yn, 
+				regdate 
+			from member
+	</sql>
+	
+	<resultMap type="mz.dto.Member" id="memberResult">
+		<id column="id" property="id"/>
+		<result column="id" property="pwd" />
+		<result column="name" property="name" />
+		<result column="nickname" property="nickname" />
+		<result column="email" property="email" />
+		<result column="auth_key" property="authKey" />
+		<result column="auth_state" property="authState" />
+		<result column="use_yn" property="useYn" />
+		<result column="regdate" property="regDate" />
+	</resultMap>
+		
+	
+<!-- test -->
+	<select id="getTime" resultType="string">
+		select sysdate from dual
+	</select>
+
+	<select id="login" resultType="mz.dto.Member">
+		select * from member where id = #{id} and pwd = #{pwd}
+	</select>
+
+	<select id="selectMemberAll" resultMap="memberResult">
+		<include refid="selectSql"></include>	
+	</select>
+	
+	<select id="selectMemberById" resultMap="memberResult">
+		<include refid="selectSql"></include>
+		where id = #{id}	
+	</select>
+	
+	<insert id="insertMember"  parameterType="mz.dto.Member">
+		insert into member(id ,pwd, name, nickname, email, auth_key) 
+			values (#{id}, #{pwd}, #{name}, #{nickname}, #{email}, #{authKey})
+	</insert>
+	
+</mapper>

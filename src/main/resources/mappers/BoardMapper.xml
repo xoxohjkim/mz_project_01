@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mz.mappers.BoardMapper">
+	
+<!-- resultMap -->
+
+	<resultMap type="mz.dto.BoardGroup" id="bgrResult">
+		<id column="bgr_id" property="id" />
+		<result column="bgr_key" property="key" />
+		<result column="bgr_name" property="name" />
+	</resultMap>
+
+	<resultMap type="mz.dto.Category" id="cateResult">
+		<id column="brd_cate_id" property="id" />
+		<result column="brd_cate_key" property="key" />
+		<result column="brd_cate_name" property="name" />
+		<result column="brd_parent" property="parentId" />
+		<result column="brd_cate_order" property="order" />
+		
+		<association column="bgr_id" property="bgr" select="selectBgrById" fetchType="lazy"/>
+	</resultMap>
+	
+	<resultMap type="mz.dto.Board" id="boardResult">
+		<id column="brd_id" property="id" />
+		<result column="brd_title" property="title" />
+		<result column="brd_content" property="content" />
+		<result column="brd_hit" property="hit" />
+		<result column="regdate" property="regDate" />
+		
+		<association column="mem_id" property="member" select="mz.mapper.MemberMapper.selectMemberById" fetchType="lazy"/>
+		<association column="bgr_id" property="bgr" select="selectBgrById" fetchType="lazy"/>
+	</resultMap>
+
+
+<!-- sql  -->	
+
+	<sql id = "bgrSelectSql">
+		select bgr_id, bgr_key, bgr_name from board_group 
+	</sql>
+	
+	<sql id ="cateSelectSql">
+		select brd_cate_id, board_group_id, brd_cate_key, brd_cate_name, brd_parent, brd_cate_order from board_cate
+	</sql>
+	
+	<sql id = "boardSelectSql">
+		select brd_id, bgr_id, mem_id, brd_title, brd_content, brd_hit, regdate from board
+	</sql>
+	
+	
+<!-- query  -->
+	<select id="selectBoardByAll" resultMap="boardResult">
+		<include refid="boardSelectSql"></include>
+	</select>
+	
+	<select id = "selectBgrById" resultMap="bgrResult">
+		<include refid="bgrSelectSql"></include>
+		 where bgr_id = #{id}
+	</select>
+	
+	<select id = "selectBoardByGroup" resultMap="boardResult">
+		<include refid="boardSelectSql"></include>
+		where bgr_id = #{bgr.id}
+	</select>
+
+</mapper>

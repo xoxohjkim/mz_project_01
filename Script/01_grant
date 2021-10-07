@@ -1,0 +1,19 @@
+--계정 생성 실행 alt-x
+CREATE USER hjkim IDENTIFIED BY "rootroot";
+
+--권한 부여
+GRANT CONNECT, DBA, RESOURCE TO hjkim;
+
+-- 현재 접속 계정 조회
+SELECT USER
+FROM dual;
+
+
+-- 필요시 쓰세요. 헤어랑 계정 삭제 및 모든 정보 삭제.
+SELECT *
+FROM USER_SEQUENCES;
+
+SELECT *
+FROM TABS;
+
+DROP USER hjkim CASCADE;
