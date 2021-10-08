@@ -1,14 +1,12 @@
 package mz.controller;
 
 import java.io.IOException;
-import java.io.Reader;
-import java.nio.charset.Charset;
 import java.util.List;
+import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import org.apache.ibatis.io.Resources;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.lang.Nullable;
@@ -16,8 +14,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
@@ -25,17 +23,22 @@ import org.springframework.web.servlet.ModelAndView;
 import lombok.extern.log4j.Log4j;
 import mz.dto.Board;
 import mz.dto.BoardGroup;
+import mz.dto.Comment;
 import mz.dto.Member;
 import mz.dto.PageMaker;
 import mz.dto.SearchCriteria;
 import mz.service.BoardService;
+import mz.service.CommentService;
 
 @Log4j
 @Controller
 public class BoardController {
 	
 	@Autowired
-	private BoardService service;
+	private BoardService boardService;
+	
+	@Autowired
+	private CommentService commentService;
 	
 	
 	@GetMapping("/main")
@@ -44,53 +47,37 @@ public class BoardController {
 	}
 	//게시판 리스트
 	@GetMapping("/board")
-	//@RequestMapping(value = "/board", method = RequestMethod.GET, produces = "application/text;charset=UTF-8")
 	public ModelAndView list(SearchCriteria cri, @Nullable @RequestParam String kind, @Nullable @RequestParam String id,
 										@Nullable @RequestParam String cond, @Nullable @RequestParam String keyword) throws IOException {
-		
+		//parameter 한글안넘어감
 		HttpHeaders responseHeaders = new HttpHeaders(); 
 		responseHeaders.add("Content-Type", "text/html; charset=utf-8");
 	
 		log.info("board list");
 		PageMaker pageMaker = new PageMaker();
-		
 		pageMaker.setCri(cri);
 		
 		ModelAndView mv = new ModelAndView();
-		
-		BoardGroup bg = service.getBoardByGroupKey(kind);
+		BoardGroup bg = boardService.getBoardByGroupKey(kind);
 		
 		List<Board> list = null;
 		
 		if(kind != null) {
-			
 			if(id != null) {
 				log.info("게시글 상세");
 				
-				list = service.selectBoardByGroup(bg.getId());
-				Board board = service.selectBoardById(Integer.parseInt(id));
+				list = boardService.selectBoardByGroup(bg.getId());
+				Board board = boardService.selectBoardById(Integer.parseInt(id));
 				mv.addObject("board", board);
 				mv.setViewName(kind + "_board/" + kind + "_board_detail");
 				
 			}else {	
 				log.info("게시글 리스트");
+				// board?kind=gnr / key로 board group의 id
+				list = boardService.pagingSelectBoardByAll(cri, String.valueOf(bg.getId()), cond, keyword);
+				pageMaker.setTotalCount(boardService.countSelectBoardByAll(cri, String.valueOf(bg.getId()), cond, keyword));
 				
-				// board?kind=gnr
-				// key로 board group의 id
-				list = service.pagingSelectBoardByAll(cri, String.valueOf(bg.getId()), cond, keyword);
-				pageMaker.setTotalCount(service.countSelectBoardByAll(cri, String.valueOf(bg.getId()), cond, keyword));
-		
-				
-				System.out.println("몇개?" + service.countSelectBoardByAll(cri, String.valueOf(bg.getId()), cond, keyword));
-				for(Board b : list) {
-					System.out.println(b);
-				}
-				
-				System.out.println("cri : " + cri);
-				System.out.println(cri.getRowStart() + " / " + cri.getRowEnd());
-				
-				mv.addObject("totalCnt", service.countSelectBoardByAll(cri, String.valueOf(bg.getId()), cond, keyword));
-				
+				mv.addObject("totalCnt", boardService.countSelectBoardByAll(cri, String.valueOf(bg.getId()), cond, keyword));
 				mv.setViewName(kind + "_board/" + kind + "_board_list");
 				
 			}
@@ -119,7 +106,7 @@ public class BoardController {
 		mv.addObject("act", act);
 		
 		if(id != null) {
-			Board board = service.selectBoardById(Integer.parseInt(id));
+			Board board = boardService.selectBoardById(Integer.parseInt(id));
 			mv.addObject("board", board);
 		}
 		
@@ -145,12 +132,12 @@ public class BoardController {
 		Member loginUser = (Member) session.getAttribute("loginUser");
 		
 		log.info("현재 로그인 - " + loginUser);
-		BoardGroup bgr = service.getBoardByGroupKey(kind);
+		BoardGroup bgr = boardService.getBoardByGroupKey(kind);
 		board.setBgr(bgr);
 		board.setMember(loginUser);
 		System.out.println(board);
 		
-		int res = service.insertGnrBoard(board);
+		int res = boardService.insertGnrBoard(board);
 		return res;
 	}
 	
@@ -167,22 +154,93 @@ public class BoardController {
 		
 		log.info("현재 로그인 - " + loginUser);
 		
-		Board b = service.selectBoardById(id);
+		Board b = boardService.selectBoardById(id);
 		
 		int res = 0;
 		if(act.equals("modify")) {
 			log.info("게시물 수정");
 			b.setTitle(board.getTitle());
 			b.setContent(board.getContent());
-			res = service.modifyGnrBoard(board);
+			res = boardService.modifyGnrBoard(board);
 			
 		}else if(act.equals("delete")) {
 			log.info("게시물 삭제");
-			res = service.deleteGnrBoard(board);
+			res = boardService.deleteGnrBoard(board);
 		}
 		System.out.println(board);
+		return res;
+	}
+	
+	
+	//댓글리스트 post
+	@ResponseBody
+	@PostMapping("/board/comment/list")
+	public List<Comment> commentList(@RequestBody Map<String, Object> map) {
+		log.info("댓글 리스트 - post");
+		int id = (int) map.get("id");
+		List<Comment> commentList = commentService.selectCmtListByBrdId(id);
+		return commentList;
+	}
+	
+	
+	//댓글 추가
+	@ResponseBody
+	@PostMapping("/comment/add")
+	public int commentAct(@RequestBody Map<String, Object> map, HttpSession session, HttpServletRequest request) {
+		session = request.getSession();
+		Member loginUser = (Member) session.getAttribute("loginUser");
 		
+		log.info("댓글 추가");
+		String bid = map.get("bid").toString();
+		String content = map.get("content").toString();
+		
+		Comment comment = new Comment();
+		comment.setMember(loginUser);
+		comment.setBoard(boardService.selectBoardById(Integer.parseInt(bid)));
+		comment.setContent(content);
+		int res = commentService.insertComment(comment);
+		return res;
+	}
+	
+
+	//댓글 삭제
+	@ResponseBody
+	@PostMapping("/comment/delete")
+	public int commentDelete(@RequestBody Map<String, Object> map, HttpSession session, HttpServletRequest request) {
+		session = request.getSession();
+		Member loginUser = (Member) session.getAttribute("loginUser");
+		
+		log.info("댓글 삭제");
+		
+		String cid = map.get("id").toString();
+		Comment comment = commentService.getCommentById(Integer.parseInt(cid));
+		int res = commentService.deleteComment(comment);
 		
 		return res;
+	}
+	
+	//댓글 수정
+	@ResponseBody
+	@PostMapping("/comment/modify")
+	public int commentModify(@RequestBody Map<String, Object> map, HttpSession session, HttpServletRequest request) {
+		log.info("댓글 수정");
+		String cid = map.get("id").toString();
+		String content = map.get("content").toString();
+		
+		Comment comment = commentService.getCommentById(Integer.parseInt(cid));
+		comment.setContent(content);
+		int res = commentService.updateComment(comment);
+		return res;
+	}
+	
+	//댓글가져오기
+	@ResponseBody
+	@PostMapping("/comment/{id}")
+	public Comment getCmt(@PathVariable int id) {
+		System.out.println(id);
+		Comment comment = commentService.getCommentById(id);
+		System.out.println(comment);
+		return comment;
+		
 	}
 }

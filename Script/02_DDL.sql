@@ -101,10 +101,10 @@ create table board_comment(
 	cmt_id NUMBER(12) NOT NULL, /*PK*/
 	brd_id NUMBER(12) NOT NULL, /* 게시판아이디 - fk */
 	mem_id varchar2(20) NOT NULL, /* 작성한 회원 아이디 - fk */
-	cmt_lv NUMBER(12) NOT NULL, /* depth */
-	cmt_seq NUMBER(12) NOT NULL, /* 같은 depth내 순서 */
+	cmt_lv NUMBER(12) default 1 NOT NULL, /* depth */
+	cmt_seq NUMBER(12) default 1 NOT NULL, /* 같은 depth내 순서 */
 	cmt_content varchar2(4000) NOT NULL,/* 댓글 내용*/
-	regdate DATE NOT NULL /* 등록일 */
+	regdate DATE default sysdate NOT NULL /* 등록일 */
 )SEGMENT CREATION IMMEDIATE;
 
 ALTER TABLE board_comment ADD CONSTRAINT PK_CMT_ID PRIMARY KEY (cmt_id);
