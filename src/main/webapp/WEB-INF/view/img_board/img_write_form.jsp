@@ -4,6 +4,7 @@
 
 <script>
 $(document).ready(function(){
+	
 	var kind = getParameterByName('kind');
 	var act = getParameterByName('act');
 	
@@ -38,7 +39,7 @@ $(document).ready(function(){
 	}
 	
 	
-	
+
 //파일업로드	
 	 $("input[type='file']").change(function(e){
 
@@ -46,7 +47,7 @@ $(document).ready(function(){
 	      $('#preview').empty();
 
 	      var files = e.target.files;
-	      var arr =Array.prototype.slice.call(files);
+	      var arr = Array.prototype.slice.call(files);
 	      
 	      //업로드 가능 파일인지 체크
 	      for(var i=0;i<files.length;i++){
@@ -89,16 +90,16 @@ function preview(arr){
         }
         
         //div에 이미지 추가
-        var str = '<div style="display: inline-flex; padding: 10px;"><li>';
-        str += '<span>'+fileName+'</span><br>';
+        var str = '<div class="preview_div">';
+        //str += '<span>'+fileName+'</span><br>';
         
         //이미지 파일 미리보기
         if(f.type.match('image.*')){
           var reader = new FileReader(); //파일을 읽기 위한 FileReader객체 생성
           reader.onload = function (e) { //파일 읽어들이기를 성공했을때 호출되는 이벤트 핸들러
-            //str += '<button type="button" class="delBtn" value="'+f.name+'" style="background: red">x</button><br>';
-            str += '<img src="'+e.target.result+'" title="'+f.name+'" width=100 height=100 />';
-            str += '</li></div>';
+            //str += '<button type="button" id="delBtn" value="'+f.name+'" fname="' + f.name + '">x</button><br>';
+            str += '<ul><li><img src="'+ e.target.result+'" title="'+f.name+'" width=150 height=150 />';
+            str += '</li></ul></div>';
             $(str).appendTo('#preview');
           } 
           reader.readAsDataURL(f);
@@ -108,6 +109,8 @@ function preview(arr){
         }
       });//arr.forEach
 }
+ 
+	
 	
 	var kind = getParameterByName('kind');
 	var act = getParameterByName('act');
@@ -116,7 +119,7 @@ function preview(arr){
 	
 	$('#imgWriteBtn').click(function(){
 		var formData = new FormData();
-        var file = $("input[name='uploadFile']")[0].files;
+        var file = $("input[id='uploadFile']")[0].files;
         
         for(var pair of formData.entries()) {
             console.log(pair[0]+ ', '+ pair[1]); 
@@ -129,29 +132,28 @@ function preview(arr){
       	formData.append('title' , $('#title').val())
       	formData.append('content', $('#content').val())
       	
-      
-		$.ajax({
-			type: "POST",
-			enctype: "multipart/form-data",
-			url: "/form/img/write",
-			data : formData,
-			processData: false,
-			contentType: false,
-			success: function (data) {
-				console.log(data)
-			},
-			error: function(request,status,error){
-				alert('에러' + request.status+request.responseText+error);
-				console.log(error);
-			}
-		 });
+      	if (confirm("게시물을 작성하시겠습니까?")) {
+			$.ajax({
+				type: "POST",
+				enctype: "multipart/form-data",
+				url: "/form/" + kind + "/" + act,
+				data : formData,
+				processData: false,
+				contentType: false,
+				success: function (data) {
+					window.location.href='/board?kind=' + kind
+				},
+				error: function(request,status,error){
+					alert('에러' + request.status+request.responseText+error);
+					console.log(error);
+				}
+			 });
+      	}
 	});
 
 	
-	   
-	 
-});
 
+});
 
 </script>
 ~이미지게시판~
@@ -165,9 +167,12 @@ function preview(arr){
 			<td>내용</td> <td><input type="text" name="content" id="content"></td>
 		</tr>
 	</table>
-		<div class="container">
-			  <input type="file" name="uploadFile" id="uploadFile" multiple>
-			   <div id="preview"></div>
+		<div class="fileArea">
+			  <input type="file" name="file" id="uploadFile" multiple >
+			  <div id="preview"></div>
 		</div>
 </form>
+
+<div class="img_write_btns">
 	<input type="button" id="imgWriteBtn" value="글쓰기">
+</div>

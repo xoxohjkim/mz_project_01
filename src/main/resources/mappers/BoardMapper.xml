@@ -30,6 +30,7 @@
 		
 		<association column="mem_id" property="member" select="mz.mapper.MemberMapper.selectMemberById" fetchType="lazy"/>
 		<association column="bgr_id" property="bgr" select="selectBoardGroupById" fetchType="lazy"/>
+		
 	</resultMap>
 
 

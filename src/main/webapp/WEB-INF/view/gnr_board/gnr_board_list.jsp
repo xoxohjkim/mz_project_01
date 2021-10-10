@@ -1,5 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/view/include/header.jsp" %>
+
 <script>
 $(document).ready(function(){
 	
@@ -51,11 +52,15 @@ $(document).ready(function(){
 				<c:forEach var="b" items="${list}" varStatus="status">
 					<thead>
 						<tr>
-							<td>${b.id}</td>
-							<td><a onclick='location.href="?kind=${kind}&id=${b.id}"'>${b.title}</a>
+							<td>${pageMaker.totalCount - ((pageMaker.cri.page -1) * pageMaker.cri.perPageNum + status.index)}</td>
+							<td>
+								<a onclick='location.href="?kind=${kind}&id=${b.id}"'>${b.title}</a>
+								<span class="cmtcnt">(${b.cmtCnt})</span>
+							</td>
 							<td>${b.member.nickname}</td>
 							<td>${b.regDate}</td>
 							<td>${b.hit}</td>
+					
 						</tr>
 					</thead>
 				</c:forEach>
@@ -77,7 +82,7 @@ $(document).ready(function(){
 	
 		<!-- paging -->
 		
-			<div>
+			<div  class="board_page">
 				    <c:if test="${pageMaker.prev}">
 				    	<p><a href="board${pageMaker.makeQuery(pageMaker.startPage - 1)}&kind=${kind}&cond=${cond}&keyword=${keyword}">이전</a></p>
 				    </c:if> 

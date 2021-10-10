@@ -40,4 +40,9 @@ public class CommentServiceImpl implements CommentService {
 		return mapper.getCommentById(cmtId);
 	}
 
+	@Override
+	public int countByBrdId(int brdId) {
+		return mapper.countByBrdId(brdId);
+	}
+
 }

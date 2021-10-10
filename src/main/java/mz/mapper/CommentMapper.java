@@ -10,4 +10,5 @@ public interface CommentMapper {
 	int insertComment(Comment comment);
 	int updateComment(Comment comment);
 	int deleteComment(Comment comment);
+	int countByBrdId(int brdId);
 }

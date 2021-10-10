@@ -2,6 +2,8 @@ package mz.service.impl;
 
 import java.io.File;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 import java.util.UUID;
@@ -11,6 +13,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
+import lombok.extern.log4j.Log4j;
 import mz.dto.Board;
 import mz.dto.FileUpload;
 import mz.dto.Member;
@@ -18,6 +21,7 @@ import mz.mapper.BoardMapper;
 import mz.mapper.FileUploadMapper;
 import mz.service.FileUploadService;
 
+@Log4j
 @Service
 @Transactional
 public class FileUploadServiceImpl implements FileUploadService {
@@ -42,12 +46,13 @@ public class FileUploadServiceImpl implements FileUploadService {
 		if(!dir.exists()) {
 			dir.mkdirs();
 		}
-	
-
 		
+		int no = mapper.nextBrdId();
+		System.out.println("board max id : " + no);
+		
+
 		System.out.println("이미지업로드");
-		 for (MultipartFile  multipartFile : uploadFile) {
-			 
+		for (MultipartFile  multipartFile : uploadFile) {
 			 
 			System.out.println("Upload File Name: " + multipartFile.getOriginalFilename());
 			System.out.println("Upload File Size: " + multipartFile.getSize());
@@ -64,11 +69,9 @@ public class FileUploadServiceImpl implements FileUploadService {
 			
 			System.out.println(uploadFileName);
 			File saveFile = new File(dir, uploadFileName);
-			
-			System.out.println(dir);
 
 			//String path = "upload/img/"+ uploadFileName+ "." + exc;
-			String now = new SimpleDateFormat("yyyy-MM-dd-Hm-sS").format(new Date()); 
+			
 			try {
 				multipartFile.transferTo(saveFile);
 			} catch(Exception e) {
@@ -80,14 +83,12 @@ public class FileUploadServiceImpl implements FileUploadService {
 			
 			System.out.println("저장될 path: " + path);
 		
-			int no = mapper.nextBrdId();
-			System.out.println("board max id : " + no);
 			
 			FileUpload file = new FileUpload();
 			file.setBrdId(no);
 			file.setMember(loginUser);
 			file.setPath(path);
-			
+	
 			res += mapper.insertFile(file);
 			
 		 }

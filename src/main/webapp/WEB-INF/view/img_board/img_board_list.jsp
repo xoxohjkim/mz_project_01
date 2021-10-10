@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <%@ include file="/WEB-INF/view/include/header.jsp" %>
+<style>
+
+</style>
 <script>
 $(document).ready(function(){
 	
@@ -16,7 +19,9 @@ $(document).ready(function(){
 	 
 });
 </script>
+
 	<div>
+	
 		<select id="gnrSearchBox">
 			<option value="" selected>선택</option>
 			<option value="brd_title">제목</option>
@@ -30,9 +35,9 @@ $(document).ready(function(){
 	<table id="gnr_board_list">
 			<colgroup>
 				<col width="5%">
-				<col width="45%%">
+				<col width="50%%">
 				<col width="20%">
-				<col width="20%">
+				<col width="15%">
 				<col width="10%">
 			</colgroup>
 			<thead>
@@ -45,26 +50,28 @@ $(document).ready(function(){
 				</tr>
 			</thead>
 			<tbody>
-			
-			<tr>
-			<c:if test = "${totalCnt != 0}">
-				<c:forEach var="b" items="${list}" varStatus="status">
-					<thead>
-						<tr>
-							<td>${b.id}</td>
-							<td><a onclick='location.href="?kind=${kind}&id=${b.id}"'>${b.title}</a>
-							<td>${b.member.nickname}</td>
-							<td>${b.regDate}</td>
-							<td>${b.hit}</td>
-						</tr>
-					</thead>
-				</c:forEach>
-			</c:if>
+					<c:if test = "${totalCnt != 0}"> 
+						<c:forEach var="b" items="${list}" varStatus="status">
+							<tr>
+								<td>${pageMaker.totalCount - ((pageMaker.cri.page -1) * pageMaker.cri.perPageNum + status.index)}</td>
+								<td>
+									<a onclick='location.href="?kind=${kind}&id=${b.id}"'>
+										<img src="/resources/${b.fileList[0].path}" class="thum" width="50px" height="50px">
+										${b.title}
+										<span class="cmtcnt">(${b.cmtCnt})</span>
+									</a>
+								</td>
+								<td>${b.member.nickname}</td>
+								<td>${b.regDate}</td>
+								<td>${b.hit}</td>
+							</tr>
+						</c:forEach>
+					</c:if>
+				</thead>
 			<c:if test = "${totalCnt == 0}">
 				<td colspan=5>게시글이 없습니다.</td>
 			</c:if>
-			</tr>
-			
+
 			</tbody>
 	</table>
 	</div>
@@ -77,7 +84,7 @@ $(document).ready(function(){
 	
 			<!-- paging -->
 		
-			<div>
+			<div class="board_page">
 				    <c:if test="${pageMaker.prev}">
 				    	<p><a href="board${pageMaker.makeQuery(pageMaker.startPage - 1)}&kind=${kind}&cond=${cond}&keyword=${keyword}">이전</a></p>
 				    </c:if> 
@@ -93,3 +100,4 @@ $(document).ready(function(){
 					    <p><a href="<%=request.getContextPath()%>board${pageMaker.makeQuery(pageMaker.endPage + 1)}&kind=${kind}&cond=${cond}&keyword=${keyword}">다음</a></p>
 					  </c:if>
 			</div>
+			

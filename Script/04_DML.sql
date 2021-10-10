@@ -21,6 +21,9 @@ insert into board_group(bgr_id, bgr_key, bgr_name) values (brd_group_seq.nextval
 insert into board_group(bgr_id, bgr_key, bgr_name) values (brd_group_seq.nextval, 'img', '이미지');
 
 /* 일반 test글 */
+delete from board cascade;
+delete from img_file;
+
 select  brd_id, bgr_id, mem_id, mem_nickname, brd_title, brd_content, brd_hit, regdate from board;
 insert into board(brd_id, bgr_id, mem_id, mem_nickname, brd_title, brd_content) values ( brd_seq.nextval, 1,'test', '노인증', '제목', '내용');
 insert into board(brd_id, bgr_id, mem_id, mem_nickname, brd_title, brd_content, brd_hit) values (brd_seq.nextval, 1, 'test', '닉일', '안녕하세용1', '내용1', 0);
@@ -67,3 +70,11 @@ insert into board_comment(cmt_id, brd_id, mem_id, cmt_content) values (brd_cmt_s
 
 
 select img_id, brd_id, mem_id, img_name, img_path, regdate from img_file;
+
+SELECT NVL(count(*), 0) AS cnt FROM board_comment WHERE brd_id = 6;
+SELECT NVL(count(*), 0)
+FROM (
+    SELECT count(*) AS cnt
+    FROM board_comment
+    WHERE brd_id = 6
+)

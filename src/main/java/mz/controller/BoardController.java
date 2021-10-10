@@ -55,11 +55,9 @@ public class BoardController {
 	@GetMapping("/board")
 	public ModelAndView list(SearchCriteria cri, @Nullable @RequestParam String kind, @Nullable @RequestParam String id,
 										@Nullable @RequestParam String cond, @Nullable @RequestParam String keyword) throws IOException {
-		//parameter 한글안넘어감
-		HttpHeaders responseHeaders = new HttpHeaders(); 
-		responseHeaders.add("Content-Type", "text/html; charset=utf-8");
 	
 		log.info("board list");
+		
 		PageMaker pageMaker = new PageMaker();
 		pageMaker.setCri(cri);
 		
@@ -67,32 +65,42 @@ public class BoardController {
 		BoardGroup bg = boardService.getBoardByGroupKey(kind);
 		
 		List<Board> list = null;
+		List<FileUpload> fileList =null;
+		int cmtCnt = 0;
 		
-		if(kind != null) {
-			if(id != null) {
-				log.info("게시글 상세");
-				
-				list = boardService.selectBoardByGroup(bg.getId());
-				Board board = boardService.selectBoardById(Integer.parseInt(id));
-				List<FileUpload> fileList = fileService.selectFileByBrdId(Integer.parseInt(id));
-				
-				if(fileList != null) {
-					mv.addObject("fileList", fileList);
-				}
-				
-				mv.addObject("board", board);
-				mv.setViewName(kind + "_board/" + kind + "_board_detail");
-				
-			}else {	
-				log.info("게시글 리스트");
-				// board?kind=gnr / key로 board group의 id
-				list = boardService.pagingSelectBoardByAll(cri, String.valueOf(bg.getId()), cond, keyword);
-				pageMaker.setTotalCount(boardService.countSelectBoardByAll(cri, String.valueOf(bg.getId()), cond, keyword));
-				
-				mv.addObject("totalCnt", boardService.countSelectBoardByAll(cri, String.valueOf(bg.getId()), cond, keyword));
-				mv.setViewName(kind + "_board/" + kind + "_board_list");
-				
+		if(id != null) {
+			log.info("게시글 상세");
+			
+			Board board = boardService.selectBoardById(Integer.parseInt(id));
+			list = boardService.selectBoardByGroup(bg.getId());
+			
+			if(kind.equals("img")) {
+				fileList = fileService.selectFileByBrdId(Integer.parseInt(id));
+				board.setFileList(fileList);
+				mv.addObject("fileList", fileList);
 			}
+		
+			mv.addObject("board", board);
+			mv.setViewName(kind + "_board/" + kind + "_board_detail");
+			
+		}else {	
+			log.info("게시글 리스트");
+			// board?kind=gnr / key로 board group의 id
+			list = boardService.pagingSelectBoardByAll(cri, String.valueOf(bg.getId()), cond, keyword);
+			
+			for(Board b : list) {
+				if(kind.equals("img")) {
+					fileList = fileService.selectFileByBrdId(b.getId());
+					b.setFileList(fileList);
+				}
+				cmtCnt = commentService.countByBrdId(b.getId());
+				b.setCmtCnt(cmtCnt);
+			}
+			
+			pageMaker.setTotalCount(boardService.countSelectBoardByAll(cri, String.valueOf(bg.getId()), cond, keyword));
+			mv.addObject("totalCnt", boardService.countSelectBoardByAll(cri, String.valueOf(bg.getId()), cond, keyword));
+			mv.setViewName(kind + "_board/" + kind + "_board_list");
+			
 		}
 		
 		mv.addObject("cond", cond);

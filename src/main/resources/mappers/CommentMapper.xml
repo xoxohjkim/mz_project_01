@@ -46,4 +46,8 @@
 		delete from board_comment where cmt_id = #{id}
 	</delete>
 	
+	<select id="countByBrdId" resultType="int">
+		select count(*) from board_comment where brd_id = #{brdId}
+	</select>
+	
 </mapper>
