@@ -2,6 +2,8 @@ package mz.dto;
 
 import java.sql.Date;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,5 +25,7 @@ public class Member {
 	private int authKey;
 	private String authState;
 	private String useYn;
+	
+	@JsonFormat
 	private Date regDate;
 }

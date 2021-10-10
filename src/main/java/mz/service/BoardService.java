@@ -2,11 +2,13 @@ package mz.service;
 
 import java.util.List;
 
+import org.springframework.stereotype.Service;
+
 import mz.dto.Board;
 import mz.dto.BoardGroup;
-import mz.dto.Criteria;
 import mz.dto.SearchCriteria;
 
+@Service
 public interface BoardService {
 	List<Board> selectBoardByGroup(int bgrId);
 	List<Board> selectBoardByAll();

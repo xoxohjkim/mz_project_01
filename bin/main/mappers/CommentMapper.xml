@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mz.mapper.CommentMapper">
+
+<!-- resultMap -->	
+
+	<resultMap type="mz.dto.Comment" id="commentResult">
+		<id column="cmt_id" property="id" />
+		<result column="cmt_lv" property="lv" />
+		<result column="cmt_seq" property="seq" />
+		<result column="cmt_content" property="content" />
+		<result column="regdate" property="regDate" />
+		
+		<association column="brd_id" property="board" select="mz.mapper.BoardMapper.selectBoardById" fetchType="lazy"/>
+		<association column="mem_id" property="member" select="mz.mapper.MemberMapper.selectMemberById" fetchType="lazy"/>
+	</resultMap>
+	
+
+<!-- sql -->	
+	<sql id="selectSql">
+		select cmt_id, brd_id, mem_id, cmt_lv, cmt_seq, cmt_content, regdate from board_comment
+	</sql>
+
+	
+<!-- query -->	
+	<select id="selectCmtListByBrdId" resultMap="commentResult">
+		<include refid="selectSql"></include>
+		where brd_id = #{board.id}
+	</select>
+	
+	<select id="getCommentById" resultMap="commentResult">
+		<include refid="selectSql"></include>
+		where cmt_id = #{id}
+	</select>
+
+	<insert id="insertComment" parameterType="mz.dto.Comment">
+		insert into board_comment(cmt_id, brd_id, mem_id, cmt_content)
+			values (brd_cmt_seq.nextval, #{board.id}, #{member.id}, #{content})
+	</insert>
+	<update id="updateComment" parameterType="mz.dto.Comment">
+		update board_comment set cmt_content = #{content}
+		where cmt_id = #{id}
+	</update>
+	
+	<delete id="deleteComment" parameterType="mz.dto.Comment">
+		delete from board_comment where cmt_id = #{id}
+	</delete>
+	
+</mapper>

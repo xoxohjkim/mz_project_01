@@ -63,3 +63,7 @@ SELECT COUNT(*) FROM board where bgr_id = 1 and brd_title like '%안%';
 							ORDER BY REGDATE desc )B)A
 			WHERE A.RNUM BETWEEN 11 AND 20
 				ORDER BY A.RNUM;
+				
+select * from BOARD_COMMENT;
+update board_comment set cmt_content = '수정수정' and regdate = sysdate
+where cmt_id = 1;
