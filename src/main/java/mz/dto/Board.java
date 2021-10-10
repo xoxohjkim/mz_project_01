@@ -1,8 +1,7 @@
 package mz.dto;
 
 import java.sql.Date;
-
-import com.fasterxml.jackson.annotation.JsonFormat;
+import java.util.List;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -24,4 +23,5 @@ public class Board {
 	private String content;
 	private int hit;
 	private Date regDate;
+	private List<FileUpload> fileList;
 }

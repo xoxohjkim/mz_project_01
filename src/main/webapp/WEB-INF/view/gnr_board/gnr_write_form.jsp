@@ -38,7 +38,7 @@ $(document).ready(function(){
 });
 </script>
 
-<form method="post"  action="/gnrWrite" autocomplete="off" id="doGnrWrite">
+<form method="post" action="/gnrWrite" autocomplete="off" id="doGnrWrite">
 	<table>
 		<tr>
 			<td>제목</td> <td><input type="text" name="title" id="title"></td>

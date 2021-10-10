@@ -81,15 +81,15 @@ create table img_file (
 	img_id NUMBER(12) NOT NULL, /*PK*/
 	brd_id NUMBER(12) NOT NULL, /* 게시판아이디 - fk */
 	mem_id varchar2(20) NOT NULL, /* 작성한 회원 아이디 - fk */
-	img_name varchar2(30) NOT NULL, /* 파일 이름 */
 	img_path varchar2(200) NOT NULL, /* 파일 경로 */
-	regdate DATE NOT NULL /* 등록일 */
+	regdate DATE default sysdate NOT NULL /* 등록일 */
 )SEGMENT CREATION IMMEDIATE;
 
 ALTER TABLE img_file ADD CONSTRAINT PK_IMG_file PRIMARY KEY (img_id);
 
-ALTER TABLE img_file ADD CONSTRAINT 
-	FK_BRD_TO_IMG_file FOREIGN KEY(brd_id) REFERENCES BOARD(brd_id);
+/*트랜잭션 시 무결성*/
+/*ALTER TABLE img_file ADD CONSTRAINT 
+	FK_BRD_TO_IMG_file FOREIGN KEY(brd_id) REFERENCES BOARD(brd_id);*/
 	
 ALTER TABLE IMG_file ADD CONSTRAINT
 	FK_MEMBER_T0_IMG_file FOREIGN KEY(mem_id) REFERENCES MEMBER(id);

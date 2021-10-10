@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mz.mapper.FileUploadMapper">
+
+<!-- resultMap -->
+
+	<resultMap type="mz.dto.FileUpload" id="fileResult">
+		<id column="img_id" property="id"></id>
+		<result column="brd_id" property="brdId"></result>
+		<result column="img_path" property="path"></result>
+		<result column="regdate" property="regDate"></result>
+		
+		<association column="mem_id" property="member" select="mz.mapper.MemberMapper.selectMemberById"></association>
+	</resultMap>
+
+<!-- sql -->
+
+	<sql id="selectSql">
+		select img_id, brd_id, mem_id, img_path, regdate from img_file
+	</sql>
+
+<!-- select -->
+	<select id="selectFileByBrdId" resultMap="fileResult">
+			<include refid="selectSql"></include>
+			where brd_id = #{brdId}
+	</select>
+	
+<!-- insert -->	
+	<insert id="insertFile" parameterType="mz.dto.FileUpload">
+		insert into img_file(img_id, brd_id, mem_id,  img_path)
+			values(img_file_seq.nextval, #{brdId}, #{member.id}, #{path})
+	</insert>
+	
+	<!-- insert시 지정할 board id -->
+	<select id="nextBrdId" resultType="int">
+		select max(brd_id) from board where bgr_id = 2
+	</select>
+</mapper>

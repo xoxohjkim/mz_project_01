@@ -2,3 +2,10 @@
 <%@ include file="/WEB-INF/view/include/header.jsp" %>
 
 ${board}
+
+${fileList}
+
+
+<c:forEach var="file" items="${fileList}" varStatus="status">
+	<img src="/resources/${file.path}">
+</c:forEach>

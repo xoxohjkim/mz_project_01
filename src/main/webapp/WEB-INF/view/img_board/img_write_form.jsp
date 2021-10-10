@@ -13,7 +13,7 @@ $(document).ready(function(){
 			 $.ajax({
 					url : "/form/" + kind + "/" + act ,
 					type:'POST',
-					data: $('#doGnrWrite').serialize(),
+					data: $('#doImgWrite').serialize(),
 					success:function(res){
 						if(res == 1){
 							window.location.href='main'
@@ -38,121 +38,124 @@ $(document).ready(function(){
 	}
 	
 	
-	$('#imgWriteBtn').click(function(){
-		
-	})
 	
-	
-	
-	$(document).ready(function()
-			// input file 파일 첨부시 fileCheck 함수 실행
-			{
-				$("#input_file").on("change", fileCheck);
-			});
+//파일업로드	
+	 $("input[type='file']").change(function(e){
 
-	/**
-	 * 첨부파일로직
-	 */
-	$(function () {
-	    $('#btn-upload').click(function (e) {
-	        e.preventDefault();
-	        $('#input_file').click();
-	    });
-	});
+	      //div 내용 비워주기
+	      $('#preview').empty();
 
-	// 파일 현재 필드 숫자 totalCount랑 비교값
-	var fileCount = 0;
-	// 해당 숫자를 수정하여 전체 업로드 갯수를 정한다.
-	var totalCount = 10;
-	// 파일 고유넘버
-	var fileNum = 0;
-	// 첨부파일 배열
-	var content_files = new Array();
-
-	function fileCheck(e) {
-	    var files = e.target.files;
+	      var files = e.target.files;
+	      var arr =Array.prototype.slice.call(files);
+	      
+	      //업로드 가능 파일인지 체크
+	      for(var i=0;i<files.length;i++){
+	        if(!checkExtension(files[i].name,files[i].size)){
+	          return false;
+	        }
+	      }
+	      
+	      preview(arr);
+	      
+	      
+	    });//file change
 	    
-	    // 파일 배열 담기
-	    var filesArr = Array.prototype.slice.call(files);
-	    
-	    // 파일 개수 확인 및 제한
-	    if (fileCount + filesArr.length > totalCount) {
-	      $.alert('파일은 최대 '+totalCount+'개까지 업로드 할 수 있습니다.');
-	      return;
-	    } else {
-	    	 fileCount = fileCount + filesArr.length;
+	    function checkExtension(fileName,fileSize){
+
+	      var regex = new RegExp("(.*?)\.(exe|sh|zip|alz)$");
+	      var maxSize = 20971520;  //20MB
+	      
+	      if(fileSize >= maxSize){
+	        alert('파일 사이즈 초과');
+	        $("input[type='file']").val("");  //파일 초기화
+	        return false;
+	      }
+	      
+	      if(regex.test(fileName)){
+	        alert('업로드 불가능한 파일이 있습니다.');
+	        $("input[type='file']").val("");  //파일 초기화
+	        return false;
+	      }
+	      return true;
 	    }
 	    
-	    // 각각의 파일 배열담기 및 기타
-	    filesArr.forEach(function (f) {
-	      var reader = new FileReader();
-	      reader.onload = function (e) {
-	        content_files.push(f);
-	        $('#articlefileChange').append(
-	       		'<div id="file' + fileNum + '" onclick="fileDelete(\'file' + fileNum + '\')">'
-	       		+ '<font style="font-size:12px">' + f.name + '</font>'  
-	       		+ '<img src="/img/icon_minus.png" style="width:20px; height:auto; vertical-align: middle; cursor: pointer;"/>' 
-	       		+ '<div/>'
-			);
-	        fileNum ++;
-	      };
-	      reader.readAsDataURL(f);
-	    });
-	    console.log(content_files);
-	    //초기화 한다.
-	    $("#input_file").val("");
-	  }
-
-	// 파일 부분 삭제 함수
-	function fileDelete(fileNum){
-	    var no = fileNum.replace(/[^0-9]/g, "");
-	    content_files[no].is_delete = true;
-		$('#' + fileNum).remove();
-		fileCount --;
-	    console.log(content_files);
-	}
-
-	/*
-	 * 폼 submit 로직
-	 */
-		function registerAction(){
-			
-		var form = $("form")[0];        
-	 	var formData = new FormData(form);
-			for (var x = 0; x < content_files.length; x++) {
-				// 삭제 안한것만 담아 준다. 
-				if(!content_files[x].is_delete){
-					 formData.append("article_file", content_files[x]);
-				}
-			}
-	   /*
-	   * 파일업로드 multiple ajax처리
-	   */    
+function preview(arr){
+      arr.forEach(function(f){
+        
+        //파일명이 길면 파일명...으로 처리
+        var fileName = f.name;
+        if(fileName.length > 10){
+          fileName = fileName.substring(0,7)+"...";
+        }
+        
+        //div에 이미지 추가
+        var str = '<div style="display: inline-flex; padding: 10px;"><li>';
+        str += '<span>'+fileName+'</span><br>';
+        
+        //이미지 파일 미리보기
+        if(f.type.match('image.*')){
+          var reader = new FileReader(); //파일을 읽기 위한 FileReader객체 생성
+          reader.onload = function (e) { //파일 읽어들이기를 성공했을때 호출되는 이벤트 핸들러
+            //str += '<button type="button" class="delBtn" value="'+f.name+'" style="background: red">x</button><br>';
+            str += '<img src="'+e.target.result+'" title="'+f.name+'" width=100 height=100 />';
+            str += '</li></div>';
+            $(str).appendTo('#preview');
+          } 
+          reader.readAsDataURL(f);
+        }else{
+          str += '<img src="/resources/img/fileImg.png" title="'+f.name+'" width=100 height=100 />';
+          $(str).appendTo('#preview');
+        }
+      });//arr.forEach
+}
+	
+	var kind = getParameterByName('kind');
+	var act = getParameterByName('act');
+	
+	console.log(kind + "/ "+ act)
+	
+	$('#imgWriteBtn').click(function(){
+		var formData = new FormData();
+        var file = $("input[name='uploadFile']")[0].files;
+        
+        for(var pair of formData.entries()) {
+            console.log(pair[0]+ ', '+ pair[1]); 
+      	}
+      
+      	for(var i=0; i<file.length; i++){
+         	console.log(file[i]);
+         	formData.append('uploadFile', file[i]);
+      	}
+      	formData.append('title' , $('#title').val())
+      	formData.append('content', $('#content').val())
+      	
+      
 		$.ajax({
-	   	      type: "POST",
-	   	   	  enctype: "multipart/form-data",
-	   	      url: "/file-upload",
-	       	  data : formData,
-	       	  processData: false,
-	   	      contentType: false,
-	   	      success: function (data) {
-	   	    	if(JSON.parse(data)['result'] == "OK"){
-	   	    		alert("파일업로드 성공");
-				} else
-					alert("서버내 오류로 처리가 지연되고있습니다. 잠시 후 다시 시도해주세요");
-	   	      },
-	   	      error: function (xhr, status, error) {
-	   	    	alert("서버오류로 지연되고있습니다. 잠시 후 다시 시도해주시기 바랍니다.");
-	   	     return false;
-	   	      }
-	   	    });
-	   	    return false;
-		}
+			type: "POST",
+			enctype: "multipart/form-data",
+			url: "/form/img/write",
+			data : formData,
+			processData: false,
+			contentType: false,
+			success: function (data) {
+				console.log(data)
+			},
+			error: function(request,status,error){
+				alert('에러' + request.status+request.responseText+error);
+				console.log(error);
+			}
+		 });
+	});
+
+	
+	   
 	 
 });
+
+
 </script>
 ~이미지게시판~
-<form method="post" action="/gnrWrite" enctype="multipart/form-data">
+<form method="post" name="dataForm" id="data" autocomplete="off" enctype="multipart/form-data">
 	<table>
 		<tr>
 			<td>제목</td> <td><input type="text" name="title" id="title"></td>
@@ -161,22 +164,10 @@ $(document).ready(function(){
 		<tr>
 			<td>내용</td> <td><input type="text" name="content" id="content"></td>
 		</tr>
-		<tr>
-			<td>
-			<!-- https://tyrannocoding.tistory.com/54 -->
- <form name="dataForm" id="dataForm" onsubmit="return registerAction()">
-  	<button id="btn-upload" type="button" style="border: 1px solid #ddd; outline: none;">파일 추가</button>
-  	<input id="input_file" multiple="multiple" type="file" style="display:none;">
-  	<span style="font-size:10px; color: gray;">※첨부파일은 최대 10개까지 등록이 가능합니다.</span>
-  	<div class="data_file_txt" id="data_file_txt" style="margin:40px;">
-		<span>첨부 파일</span>
-		<br />
-		<div id="articlefileChange">
-		</div>
-	</div>
-  	<button type="submit" style="border: 1px solid #ddd; outline: none;">전송</button>
-  </form>
-        </td>
 	</table>
+		<div class="container">
+			  <input type="file" name="uploadFile" id="uploadFile" multiple>
+			   <div id="preview"></div>
+		</div>
 </form>
 	<input type="button" id="imgWriteBtn" value="글쓰기">

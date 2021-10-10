@@ -67,3 +67,8 @@ SELECT COUNT(*) FROM board where bgr_id = 1 and brd_title like '%안%';
 select * from BOARD_COMMENT;
 update board_comment set cmt_content = '수정수정' and regdate = sysdate
 where cmt_id = 1;
+
+select * from board where bgr_id = 2;
+select max(brd_id) from board where bgr_id = 2;
+
+select img_id, brd_id, mem_id, img_path, regdate from img_file order by regdate;

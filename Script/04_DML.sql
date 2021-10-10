@@ -64,3 +64,6 @@ insert into board_cate values (brd_cate_seq.nextval, 2, 'jeju-do', '제주', 0, 
 select cmt_id, brd_id, mem_id, cmt_lv, cmt_seq, cmt_content, regdate from board_comment where brd_id = 74;
 insert into board_comment(cmt_id, brd_id, mem_id, cmt_content) values (brd_cmt_seq.nextval, 74, 'test', '74번글의 댓글');
 insert into board_comment(cmt_id, brd_id, mem_id, cmt_content) values (brd_cmt_seq.nextval, 74, 'test', '74번글의 댓글2');
+
+
+select img_id, brd_id, mem_id, img_name, img_path, regdate from img_file;

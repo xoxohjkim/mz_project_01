@@ -1,5 +1,6 @@
 package mz.controller;
 
+import java.io.File;
 import java.io.IOException;
 import java.util.List;
 import java.util.Map;
@@ -17,17 +18,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.ModelAndView;
 
 import lombok.extern.log4j.Log4j;
 import mz.dto.Board;
 import mz.dto.BoardGroup;
 import mz.dto.Comment;
+import mz.dto.FileUpload;
 import mz.dto.Member;
 import mz.dto.PageMaker;
 import mz.dto.SearchCriteria;
 import mz.service.BoardService;
 import mz.service.CommentService;
+import mz.service.FileUploadService;
 
 @Log4j
 @Controller
@@ -38,6 +42,9 @@ public class BoardController {
 	
 	@Autowired
 	private CommentService commentService;
+	
+	@Autowired
+	private FileUploadService fileService;
 	
 	
 	@GetMapping("/main")
@@ -67,6 +74,12 @@ public class BoardController {
 				
 				list = boardService.selectBoardByGroup(bg.getId());
 				Board board = boardService.selectBoardById(Integer.parseInt(id));
+				List<FileUpload> fileList = fileService.selectFileByBrdId(Integer.parseInt(id));
+				
+				if(fileList != null) {
+					mv.addObject("fileList", fileList);
+				}
+				
 				mv.addObject("board", board);
 				mv.setViewName(kind + "_board/" + kind + "_board_detail");
 				
@@ -81,6 +94,7 @@ public class BoardController {
 				
 			}
 		}
+		
 		mv.addObject("cond", cond);
 		mv.addObject("keyword", keyword);
 		mv.addObject("list", list);
@@ -118,27 +132,54 @@ public class BoardController {
 		return mv;
 	}
 	
+	
 	//form - post
 	//write
 	@ResponseBody
 	@PostMapping("/form/{kind}/{act}")
-	public int write(Board board, @PathVariable String kind, @PathVariable String act, HttpSession session, HttpServletRequest request) {
-		log.info("insert board");
+	public int writeImg(Board board, MultipartFile[] uploadFile, @PathVariable String kind, @PathVariable String act, HttpSession session, HttpServletRequest request) {
+		log.info("insert img board");
 		
 		session = request.getSession();
 		System.out.println(board);
 		//인증객체로 바꿔야됨
 		Member loginUser = (Member) session.getAttribute("loginUser");
-		
 		log.info("현재 로그인 - " + loginUser);
+		
+		
+		//file - form data로 같이 받은 title, content
+		String title = request.getParameter("title");
+		String content = request.getParameter("content");
+
 		BoardGroup bgr = boardService.getBoardByGroupKey(kind);
 		board.setBgr(bgr);
 		board.setMember(loginUser);
-		System.out.println(board);
 		
-		int res = boardService.insertGnrBoard(board);
+		int res = 0;
+		
+		//파일업로드
+		if(kind.equals("img")) {
+			log.info("이미지파일 업로드");
+			System.out.println(board);
+			board.setTitle(title);
+			board.setContent(content);
+			
+			//board, file transaction
+			res = fileService.insertFile(loginUser, board, uploadFile, getRealPath(session));
+			
+		} else if(kind.equals("gnr")) {
+			res = boardService.insertGnrBoard(board);
+		}
+		
 		return res;
 	}
+	
+	
+	private File getRealPath(HttpSession session) {
+		System.out.println(session.getServletContext().getRealPath(""));
+		return new File(session.getServletContext().getRealPath("")); 
+	}
+
 	
 	//form - post
 	// modify, delete
@@ -207,8 +248,7 @@ public class BoardController {
 	@PostMapping("/comment/delete")
 	public int commentDelete(@RequestBody Map<String, Object> map, HttpSession session, HttpServletRequest request) {
 		session = request.getSession();
-		Member loginUser = (Member) session.getAttribute("loginUser");
-		
+	
 		log.info("댓글 삭제");
 		
 		String cid = map.get("id").toString();
