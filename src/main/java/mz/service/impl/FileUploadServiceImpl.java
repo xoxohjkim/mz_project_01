@@ -106,5 +106,11 @@ public class FileUploadServiceImpl implements FileUploadService {
 		return mapper.selectFileByBrdId(brdId);
 	}
 
+	@Override
+	public int modifyFile(Member loginUser, String[] delImgId, Board board, MultipartFile[] uploadFile, File realPath) {
+		// TODO Auto-generated method stub
+		return 0;
+	}
+
 	
 }
