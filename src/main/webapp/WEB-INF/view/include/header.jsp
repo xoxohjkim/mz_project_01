@@ -10,8 +10,9 @@
 <title>Hello</title>
 
 <link rel="stylesheet" href="<c:url value="/resources/css/common.css"/>">
+<link rel="stylesheet" href="<c:url value="/resources/css/slider.css"/>">
 <script src="https://code.jquery.com/jquery-3.6.0.js"  integrity="sha256-H+K7U5CnXl1h5ywQfKtSj8PCmoN9aaq30gDh27Xc0jk=" crossorigin="anonymous"></script>
-
+<link href="//maxcdn.bootstrapcdn.com/font-awesome/4.1.0/css/font-awesome.min.css" rel="stylesheet">
 </head>
 <body>
 <header>

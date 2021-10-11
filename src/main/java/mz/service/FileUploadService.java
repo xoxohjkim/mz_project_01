@@ -10,8 +10,11 @@ import mz.dto.FileUpload;
 import mz.dto.Member;
 
 public interface FileUploadService {
-
-	int insertFile(Member loginUser, Board board, MultipartFile[] uploadFile, File realPath);
+	
 	int nextBrdId();
 	List<FileUpload> selectFileByBrdId(int brdId);
+	
+	int insertFile(Member loginUser, Board board, MultipartFile[] uploadFile, File realPath);
+	
+	int modifyFile(Member loginUser, String[] delImgId, Board board, MultipartFile[] uploadFile, File realPath);
 }

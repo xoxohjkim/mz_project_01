@@ -2,6 +2,7 @@ package mz.controller;
 
 import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -126,8 +127,11 @@ public class BoardController {
 		mv.addObject("kind", kind);
 		mv.addObject("act", act);
 		
+		Board board = null;
+		List<FileUpload> fileList = null;
+		
 		if(id != null) {
-			Board board = boardService.selectBoardById(Integer.parseInt(id));
+			board = boardService.selectBoardById(Integer.parseInt(id));
 			mv.addObject("board", board);
 		}
 		
@@ -135,6 +139,11 @@ public class BoardController {
 			mv.setViewName(kind + "_board/" + kind + "_write_form");
 			
 		}else if(act.equals("modify")) {
+			
+			fileList = fileService.selectFileByBrdId(Integer.parseInt(id));
+			board.setFileList(fileList);
+			
+			mv.addObject("fileList", fileList);
 			mv.setViewName(kind + "_board/" + kind + "_modify_form");
 		}
 		return mv;
@@ -193,7 +202,7 @@ public class BoardController {
 	// modify, delete
 	@ResponseBody
 	@PostMapping("/form/{kind}/{act}/{id}")
-	public int modifyAndDelete(Board board, @PathVariable String kind, @PathVariable String act, @PathVariable int id, HttpSession session, HttpServletRequest request) {
+	public int modifyAndDelete(Board board, MultipartFile[] uploadFile, @PathVariable String kind, @PathVariable String act, @PathVariable int id, HttpSession session, HttpServletRequest request) {
 		log.info("update, delete board");
 		log.info(kind +"/"+ act +"/"+ id);
 		//인증객체로 바꿔야됨
@@ -206,10 +215,23 @@ public class BoardController {
 		
 		int res = 0;
 		if(act.equals("modify")) {
-			log.info("게시물 수정");
-			b.setTitle(board.getTitle());
-			b.setContent(board.getContent());
-			res = boardService.modifyGnrBoard(board);
+			if(kind.equals("img")) {
+				log.info("이미지수정");
+				//form 으로 받아온 삭제할 img id
+				String[] delImgId = request.getParameterValues("delArr");
+				
+				// 1.삭제할 이미지id 삭제
+				// 2.새로운 첨부파일 넣기
+				// 3. 수정한 board의 제목 내용
+				log.info("삭제할 이미지 id ->" + Arrays.toString(delImgId));
+				//res = fileService.modifyFile(loginUser, delImgId, board, uploadFile, getRealPath(session));
+				
+			}else if(kind.equals("gnr")){
+				log.info("일반게시물 수정");
+				b.setTitle(board.getTitle());
+				b.setContent(board.getContent());
+				res = boardService.modifyGnrBoard(board);
+			}
 			
 		}else if(act.equals("delete")) {
 			log.info("게시물 삭제");
