@@ -76,6 +76,9 @@ select img_id, brd_id, mem_id, img_name, regdate from img_file where brd_id = 2;
 
 select * from board_comment;
 select count(*) from board_comment where brd_id = 7;
+select nvl((select id from member WHERE email = 'admin@naver.co' and name = '김관리') , null) as id from dual;
 
-select id from member where email = 'admin@naver.com' and name = '김관리';
-select id from member where email = 'admin@naver.com' and id = 'admin';
+select * from member;
+select * from board;
+update member set pwd = '1234';
+update board set brd_hit = brd_hit+1 where brd_id = 1;

@@ -8,7 +8,11 @@ import mz.dto.Member;
 public interface MemberService {
 	
 	int registerMember(Member member);
+	int updateMember(Member member);
+	int deleteMember(Member member);
+	
 	Member login(String id, String pwd);
 	
 	String findMemberByCondition(Member member);
+	void sendMail(Member member);
 }

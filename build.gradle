@@ -25,6 +25,8 @@ dependencies {
 	implementation group: 'org.springframework', name: 'spring-core', version: '5.2.9.RELEASE'
 	implementation group: 'org.springframework', name: 'spring-webmvc', version: '5.2.9.RELEASE'
 	implementation group: 'org.springframework', name: 'spring-tx', version: '5.2.9.RELEASE'
+	implementation group: 'org.springframework', name: 'spring-beans', version: '5.2.9.RELEASE'
+	
 	
 	
 	//spring security
@@ -47,6 +49,7 @@ dependencies {
 	implementation group: 'org.bgee.log4jdbc-log4j2', name: 'log4jdbc-log4j2-jdbc4.1', version: '1.16'
 	implementation group: 'com.oracle.database.jdbc', name: 'ojdbc8', version: '21.1.0.0'
 	
+	
 		
 	//connection pool
 	implementation group: 'com.zaxxer', name: 'HikariCP', version: '3.4.5'
@@ -66,6 +69,8 @@ dependencies {
 	//thum
 	implementation group: 'org.imgscalr', name: 'imgscalr-lib', version: '4.2'
 	
-	
+	//mail
+	implementation group: 'javax.mail', name: 'mail', version: '1.4.7'
+    implementation group: 'org.springframework', name: 'spring-context-support', version: '5.2.9.RELEASE'
     
 }

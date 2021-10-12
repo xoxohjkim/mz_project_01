@@ -17,7 +17,7 @@
 	
 	<resultMap type="mz.dto.Member" id="memberResult">
 		<id column="id" property="id"/>
-		<result column="id" property="pwd" />
+		<result column="pwd" property="pwd" />
 		<result column="name" property="name" />
 		<result column="nickname" property="nickname" />
 		<result column="email" property="email" />
@@ -35,7 +35,7 @@
 
 <!--  -->
 	<select id="login" resultType="mz.dto.Member">
-		select * from member where id = #{id} and pwd = #{pwd}
+		select * from member where id = #{id} and pwd = #{pwd} and use_yn = 'y'
 	</select>
 
 	<select id="selectMemberAll" resultMap="memberResult">
@@ -47,18 +47,34 @@
 		where id = #{id}	
 	</select>
 	
+	<select id="findMemberByCondition" resultType="string">
+		select nvl( (select id from member
+		<where>
+			 <if test="email != null">  email = #{email} </if>
+			 <if test="name != null"> and name = #{name} </if>
+			 <if test="id != null"> and id = #{id} </if>
+		</where> ), null) as id from dual
+	</select>
+	
 	<insert id="insertMember"  parameterType="mz.dto.Member">
 		insert into member(id ,pwd, name, nickname, email, auth_key) 
 			values (#{id}, #{pwd}, #{name}, #{nickname}, #{email}, #{authKey})
 	</insert>
 	
-	<select id="findMemberByCondition" resultType="string">
-		<include refid="selectSql"></include>
-		<where>
-			 <if test="email != null">  email = #{email} </if>
-			 <if test="name != null"> and name = #{name} </if>
-			 <if test="id != null"> and id = #{id} </if>
-		</where>
-	</select>
+	<update id="updateMember">
+		update member 
+		<set>
+			<if test = "pwd != null"> pwd = #{pwd}, </if>
+			<if test = "name != null"> name = #{name}, </if>
+			<if test = "nickname != null"> nickname = #{nickname}, </if>
+			<if test = "email != null"> email = #{email}, </if>
+			<if test = "authState != null"> auth_state = #{authState}, </if>
+			<if test = "useYn != null"> use_yn = #{use_yn} </if>
+		</set>
+		where id = #{id}
+	</update>
 	
+	<delete id="deleteMember">
+		update member set use_yn = 'n' where id = #{id}
+	</delete>
 </mapper>

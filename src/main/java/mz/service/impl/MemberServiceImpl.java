@@ -1,13 +1,17 @@
 package mz.service.impl;
 
 import java.util.Random;
+import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.log4j.Log4j;
+import mz.dto.Mail;
 import mz.dto.Member;
 import mz.mapper.MemberMapper;
+import mz.service.MailService;
 import mz.service.MemberService;
 
 @Service
@@ -16,6 +20,9 @@ public class MemberServiceImpl implements MemberService {
 
 	@Autowired
 	private MemberMapper mapper;
+	
+	@Autowired
+	private MailService mailService;
 	
 	@Override
 	public int registerMember(Member member) {
@@ -41,8 +48,51 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public String findMemberByCondition(Member member) {
 		String id = mapper.findMemberByCondition(member);
-		String maskingId = id.replaceAll("(?<=.{3}).", "*");
-		return maskingId;
+		return id;
+	}
+	
+	public static String masking(String id) {
+		id = id.replaceAll("(?<=.{3}).", "*");
+		return id;
+	}
+
+	@Transactional
+	@Override
+	public void sendMail(Member member) {
+		//1.임시비밀번호 생성
+		//2.멤버 비번 변경
+		//3.메일로 전송
+		System.out.println(member);
+		
+		String pwd = null;
+		for (int i = 0;i < 5; i++) {
+			pwd = UUID.randomUUID().toString().replaceAll("-", ""); // '-'제거
+		     pwd = pwd.substring(0, 8);
+	
+		}
+		member.setPwd(pwd);
+		int res =mapper.updateMember(member);
+		System.out.println("pwd res?" + res);
+	
+		Mail mail = new Mail();
+	    mail.setMailFrom("project.mz.hjkim@gmail.com");
+	    mail.setMailTo(member.getEmail());
+	    mail.setMailSubject("[임시 비밀번호 안내]");
+	    mail.setMailContent(member.getId() + "님의 " + "임시 비밀번호는 [ " + pwd + " ]입니다. <br>"
+	    		+ "로그인하여 변경해주세요.");
+
+	    mailService.sendEmail(mail);
+			
+	}
+
+	@Override
+	public int updateMember(Member member) {
+		return mapper.updateMember(member);
+	}
+
+	@Override
+	public int deleteMember(Member member) {
+		return mapper.deleteMember(member);
 	}
 
 	

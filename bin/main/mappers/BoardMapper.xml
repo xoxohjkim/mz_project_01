@@ -145,8 +145,13 @@
 		where brd_id = #{id}
 	</update>
 	
+	<update id="updateBoardHit">
+		update board set brd_hit = brd_hit+1 where brd_id = #{id}
+	</update>
+	
 <!-- delete -->
 	<delete id="deleteGnrBoard">
 		delete from board where brd_id = #{id}
 	</delete>
+	
 </mapper>

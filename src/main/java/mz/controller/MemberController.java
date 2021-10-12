@@ -10,6 +10,7 @@ import org.springframework.web.servlet.ModelAndView;
 import lombok.extern.log4j.Log4j;
 import mz.dto.Member;
 import mz.service.MemberService;
+import mz.service.impl.MemberServiceImpl;
 
 @Controller
 @Log4j
@@ -20,17 +21,26 @@ public class MemberController {
 	
 	@ResponseBody
 	@PostMapping("/find/{keyword}")
-	public ModelAndView match(@PathVariable String keyword, Member member) {
+	public String match(@PathVariable String keyword, Member member) {
 		log.info("아이디/비번찾기");
+		
 		String id = memberService.findMemberByCondition(member);
-		System.out.println(id);
-		ModelAndView mv = new ModelAndView();
 		
 		if(keyword.equals("id")) {
-			mv.addObject("id",id);
-			mv.setViewName("/find_idpw");
+			if(id != null) {
+				String masking = MemberServiceImpl.masking(id);
+				return masking;
+			}
+		}else if(keyword.equals("pwd")) {
+			if(id != null) {
+				memberService.sendMail(member);
+			}else {
+				return "";
+			}
+			
 		}
-		
-		return mv;
+	
+		return id;
+	
 	}
 }

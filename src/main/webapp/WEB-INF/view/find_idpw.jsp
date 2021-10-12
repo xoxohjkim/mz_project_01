@@ -4,15 +4,18 @@
 $(document).ready(function(){
 	
 	$('#findIdBtn').click(function(){
-	
+		
 		 $.ajax({
 				url : "/find/id",
 				type:'POST',
 				data: $('#findIdForm').serialize(),
 				success:function(res){
-					if(res == 1){
-						window.location.href='main'
+					if(res == ""){
+						alert('존재하지 않는 회원입니다.');
+					}else {
+						alert('고객님의 아이디는 ' + res + '입니다.');
 					}
+					
 				},
 				error: function(request,status,error){
 					alert('에러' + request.status+request.responseText+error);
@@ -28,8 +31,10 @@ $(document).ready(function(){
 				type:'POST',
 				data: $('#findPwForm').serialize(),
 				success:function(res){
-					if(res == 1){
-						window.location.href='main'
+					if(res == ""){
+						alert('존재하지 않는 회원입니다.');
+					}else {
+						alert('회원님의 메일주소로 임시비밀번호가 전송되었습니다.')
 					}
 				},
 				error: function(request,status,error){
@@ -58,7 +63,7 @@ $(document).ready(function(){
 		<form action="post" autocomplete="off" id="findPwForm">
 		<div>비밀번호 찾기</div>
 			<div>
-				<label>아이디</label> <input type="text" id="name" name="name">
+				<label>아이디</label> <input type="text" id="id" name="id">
 			</div>	
 			<div>
 				<label>이메일</label> <input type="text" id="email" name="email">

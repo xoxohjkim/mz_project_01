@@ -28,6 +28,7 @@ public interface BoardService {
 	int modifyGnrBoard(Board board);
 	int deleteGnrBoard(Member loginUser, Board board, File realPath);
 
+	int updateBoardHit(Board board);
 
 	
 }

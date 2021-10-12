@@ -43,7 +43,7 @@ public class BoardController {
 	@Autowired
 	private CommentService commentService;
 	
-	@Autowired
+	@Autowired(required = false)
 	private ImgFileService fileService;
 	
 	
@@ -51,6 +51,7 @@ public class BoardController {
 	public String redirectGnr() {
 		return "redirect:/board?kind=gnr";
 	}
+	
 	//게시판 리스트
 	@GetMapping("/board")
 	public ModelAndView list(SearchCriteria cri, @Nullable @RequestParam String kind, @Nullable @RequestParam String id,
@@ -73,8 +74,10 @@ public class BoardController {
 			
 			Board board = boardService.selectBoardById(Integer.parseInt(id));
 			list = boardService.selectBoardByGroup(bg.getId());
+			boardService.updateBoardHit(board);
 			
 			if(kind.equals("img")) {
+				
 				fileList = fileService.selectFileByBrdId(Integer.parseInt(id));
 				board.setFileList(fileList);
 				mv.addObject("fileList", fileList);

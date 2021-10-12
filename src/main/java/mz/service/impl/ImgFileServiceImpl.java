@@ -7,11 +7,11 @@ import java.util.Date;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Repository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.multipart.MultipartFile;
 
-import lombok.extern.log4j.Log4j;
 import mz.dto.Board;
 import mz.dto.ImageFile;
 import mz.dto.Member;
@@ -19,9 +19,7 @@ import mz.mapper.ImageFileMapper;
 import mz.service.BoardService;
 import mz.service.ImgFileService;
 
-@Log4j
 @Service
-@Transactional
 public class ImgFileServiceImpl implements ImgFileService {
 	
 	private static final String UPLOAD_PATH = "resources" + File.separator + "upload" + File.separator + "img" ;
@@ -33,6 +31,7 @@ public class ImgFileServiceImpl implements ImgFileService {
 	@Autowired
 	private BoardService boardService;
 	
+	@Transactional
 	@Override
 	public int insertFile(Member loginUser, Board board, MultipartFile[] uploadFile, File realPath) {
 		

@@ -26,4 +26,6 @@ public interface BoardMapper {
 	int insertGnrBoard(Board board);
 	int updateGnrBoard(Board board);
 	int deleteGnrBoard(Board Board);
+	
+	int updateBoardHit(Board board);
 }

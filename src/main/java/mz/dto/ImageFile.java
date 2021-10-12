@@ -12,7 +12,6 @@ import lombok.ToString;
 @Setter
 @ToString
 @NoArgsConstructor
-@AllArgsConstructor
 public class ImageFile {
 	
 	private int id;

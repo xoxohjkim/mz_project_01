@@ -3,25 +3,19 @@ package mz.service.impl;
 import java.io.File;
 import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpSession;
-
-import org.apache.log4j.pattern.FileLocationPatternConverter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.multipart.MultipartFile;
 
 import lombok.extern.log4j.Log4j;
 import mz.dto.Board;
 import mz.dto.BoardGroup;
 import mz.dto.Comment;
-import mz.dto.Criteria;
 import mz.dto.ImageFile;
 import mz.dto.Member;
 import mz.dto.SearchCriteria;
 import mz.mapper.BoardMapper;
-import mz.mapper.CommentMapper;
 import mz.service.BoardService;
 import mz.service.CommentService;
 import mz.service.ImgFileService;
@@ -44,7 +38,7 @@ public class BoardServiceImpl implements BoardService {
 	
 	@Override
 	public List<Board> selectBoardByGroup(int bgrId) {
-		// TODO Auto-generated method stub
+	
 		return mapper.selectBoardByGroup(bgrId);
 	}
 
@@ -115,6 +109,12 @@ public class BoardServiceImpl implements BoardService {
 	@Override
 	public int countSelectBoardByAll(SearchCriteria cri,String id, String cond, String keyword) {
 		return mapper.countSelectBoardByAll(cri, id, cond, keyword);
+	}
+	
+	@Transactional(isolation = Isolation.READ_COMMITTED)
+	@Override
+	public int updateBoardHit(Board board) {
+		return mapper.updateBoardHit(board);
 	}
 
 	
