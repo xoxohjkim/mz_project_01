@@ -8,37 +8,37 @@ $(document).ready(function(){
 	
 	//댓글 리스트
 	$.ajax({
-			url : "/board/comment/list" ,
-			type:'POST',
-			contentType: "application/json; charset=utf-8",
-			dataType: "json",
-			data : JSON.stringify(bid),
-			cache : false,
-			success:function(data){
-				var user = "${loginUser.id}";
-				var str = "";
-				$.each(data, function(i){
-					console.log(data)
-					str += "<tr>"
-					str += "<td>"+ data[i].member.nickname + data[i].id + "</td>"
-					str += "<td><span id='cmtContent' bid=${board.id}} cid='" + data[i].id + "'>" + data[i].content + "</span>"
-					if(data[i].member.id == user){
-						str += "<input type='button' value='수정' id='cmtModifyBtn' cid='" + data[i].id + "'>"
-						str += "<input type='button' value='삭제' id='cmtDeleteBtn' cid='" + data[i].id + "'>"
-						/* str += "<input type='hidden' value='확인' id='cmtConfirmBtn' cid='" + data[i].id + "'>" */
-					}
-					str += "<td>" + data[i].regDate + "</td>"
-					str += "</tr>";
-					
-				});
-				$('#commentList').append(str);
-			
-			},
-			error: function(request,status,error){
-				alert('에러' + request.status+request.responseText+error);
-				console.log(error);
-			}
-		});
+		url : "/board/comment/list" ,
+		type:'POST',
+		contentType: "application/json; charset=utf-8",
+		dataType: "json",
+		data : JSON.stringify(bid),
+		cache : false,
+		success:function(data){
+			var user = "${loginUser.id}";
+			var str = "";
+			$.each(data, function(i){
+				console.log(data)
+				str += "<tr>"
+				str += "<td>"+ data[i].member.nickname + data[i].id + "</td>"
+				str += "<td><span id='cmtContent' bid=${board.id}} cid='" + data[i].id + "'>" + data[i].content + "</span>"
+				if(data[i].member.id == user){
+					str += "<input type='button' value='수정' id='cmtModifyBtn' cid='" + data[i].id + "'>"
+					str += "<input type='button' value='삭제' id='cmtDeleteBtn' cid='" + data[i].id + "'>"
+					/* str += "<input type='hidden' value='확인' id='cmtConfirmBtn' cid='" + data[i].id + "'>" */
+				}
+				str += "<td>" + data[i].regDate + "</td>"
+				str += "</tr>";
+				
+			});
+			$('#commentList').append(str);
+		
+		},
+		error: function(request,status,error){
+			alert('에러' + request.status+request.responseText+error);
+			console.log(error);
+		}
+	});
 
 	
 	//댓글 등록
@@ -153,11 +153,9 @@ $(document).ready(function(){
 			 $.ajax({
 					url : "/form/${kind}/delete/${board.id}" ,
 					type:'POST',
-					data: $('#doGnrWrite').serialize(),
-					success:function(res){
-						if(res == 1){
-							window.location.href='/board?kind=${kind}'
-						}
+					success:function(){
+						window.location.href='/board?kind=${kind}'
+						
 					},
 					error: function(request,status,error){
 						alert('에러' + request.status+request.responseText+error);
@@ -176,7 +174,7 @@ function close_pop(flag) {
  };
  
 </script>
-
+${board.member.id}/${file.name}
    <div>
 		<table border="1" width="70%">
 			<tr>
@@ -194,7 +192,7 @@ function close_pop(flag) {
 					          <ul id="slider">
 								<c:forEach var="file" items="${fileList}" varStatus="status">
 					                <li>
-										<img src="/resources/${file.path}">
+										<img src="/resources/upload/img/${board.member.id}/${file.name}">
 									</li>
 								</c:forEach>
 					          </ul>

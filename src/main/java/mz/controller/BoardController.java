@@ -10,7 +10,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.HttpHeaders;
 import org.springframework.lang.Nullable;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -26,13 +25,13 @@ import lombok.extern.log4j.Log4j;
 import mz.dto.Board;
 import mz.dto.BoardGroup;
 import mz.dto.Comment;
-import mz.dto.FileUpload;
+import mz.dto.ImageFile;
 import mz.dto.Member;
 import mz.dto.PageMaker;
 import mz.dto.SearchCriteria;
 import mz.service.BoardService;
 import mz.service.CommentService;
-import mz.service.FileUploadService;
+import mz.service.ImgFileService;
 
 @Log4j
 @Controller
@@ -45,7 +44,7 @@ public class BoardController {
 	private CommentService commentService;
 	
 	@Autowired
-	private FileUploadService fileService;
+	private ImgFileService fileService;
 	
 	
 	@GetMapping("/main")
@@ -66,7 +65,7 @@ public class BoardController {
 		BoardGroup bg = boardService.getBoardByGroupKey(kind);
 		
 		List<Board> list = null;
-		List<FileUpload> fileList =null;
+		List<ImageFile> fileList = null;
 		int cmtCnt = 0;
 		
 		if(id != null) {
@@ -128,7 +127,7 @@ public class BoardController {
 		mv.addObject("act", act);
 		
 		Board board = null;
-		List<FileUpload> fileList = null;
+		List<ImageFile> fileList = null;
 		
 		if(id != null) {
 			board = boardService.selectBoardById(Integer.parseInt(id));
@@ -207,6 +206,7 @@ public class BoardController {
 		log.info(kind +"/"+ act +"/"+ id);
 		//인증객체로 바꿔야됨
 		session = request.getSession();
+		
 		Member loginUser = (Member) session.getAttribute("loginUser");
 		
 		log.info("현재 로그인 - " + loginUser);
@@ -216,15 +216,13 @@ public class BoardController {
 		int res = 0;
 		if(act.equals("modify")) {
 			if(kind.equals("img")) {
-				log.info("이미지수정");
+				log.info("이미지게시물 수정");
+				
 				//form 으로 받아온 삭제할 img id
 				String[] delImgId = request.getParameterValues("delArr");
 				
-				// 1.삭제할 이미지id 삭제
-				// 2.새로운 첨부파일 넣기
-				// 3. 수정한 board의 제목 내용
 				log.info("삭제할 이미지 id ->" + Arrays.toString(delImgId));
-				//res = fileService.modifyFile(loginUser, delImgId, board, uploadFile, getRealPath(session));
+				res = fileService.modifyFile(loginUser, delImgId, board, uploadFile, getRealPath(session));
 				
 			}else if(kind.equals("gnr")){
 				log.info("일반게시물 수정");
@@ -235,9 +233,9 @@ public class BoardController {
 			
 		}else if(act.equals("delete")) {
 			log.info("게시물 삭제");
-			res = boardService.deleteGnrBoard(board);
+			res = boardService.deleteGnrBoard(loginUser, board, getRealPath(session));
 		}
-		System.out.println(board);
+		
 		return res;
 	}
 	

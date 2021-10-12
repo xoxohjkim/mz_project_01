@@ -30,19 +30,24 @@ $(document).ready(function(){
 			}
 		});
 	});
+	
+	$('#searchInfo').click(function(){
+		
+	});
 });
 </script>	
 	
 	
 	<form name="loginForm" method="post" action="/doLogin" autocomplete="off" id="loginForm">
 		<div>
-			<input type="text" id="id" name="id" placeholder="아이디" required>
+			<input type="text" id="id" name="id" value="admin" required >
 		</div>
 		<div>
-			<input type="password" id="pwd" name="pwd" placeholder="비밀번호" required>
+			<input type="password" id="pwd" name="pwd" value="1234" required value="1234">
 		</div>
 		<div>
 			<input type="button" id="loginBtn" value="로그인">
+			<input type="button" id="searchInfo" value="아이디/비밀번호찾기" onclick='location.href="/find_idpw"'>
 		</div>
 	</form>
 

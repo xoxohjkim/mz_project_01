@@ -72,9 +72,10 @@ insert into board_comment(cmt_id, brd_id, mem_id, cmt_content) values (brd_cmt_s
 select img_id, brd_id, mem_id, img_name, img_path, regdate from img_file;
 
 SELECT NVL(count(*), 0) AS cnt FROM board_comment WHERE brd_id = 6;
-SELECT NVL(count(*), 0)
-FROM (
-    SELECT count(*) AS cnt
-    FROM board_comment
-    WHERE brd_id = 6
-)
+
+select b.brd_id, b.brd_title, c.cmt_id, c.cmt_content
+from board b left join board_comment c on b.brd_id = c.brd_id
+order by b.regdate;
+
+select b.brd_id, b.brd_title, i.img_name
+from board b left join img_file i on b.brd_id = i.brd_id;

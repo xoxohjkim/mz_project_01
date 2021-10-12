@@ -13,12 +13,12 @@ import lombok.ToString;
 @ToString
 @NoArgsConstructor
 @AllArgsConstructor
-public class FileUpload {
+public class ImageFile {
 	
 	private int id;
 	private int brdId;
 	private Member member;
-	private String path;
+	private String name;
 	private Date regDate;
 	
 }
