@@ -50,13 +50,14 @@ $(document).ready(function(){
 				</tr>
 			</thead>
 			<tbody>
+	
 					<c:if test = "${totalCnt != 0}"> 
 						<c:forEach var="b" items="${list}" varStatus="status">
 							<tr>
 								<td>${pageMaker.totalCount - ((pageMaker.cri.page -1) * pageMaker.cri.perPageNum + status.index)}</td>
 								<td>
 									<a onclick='location.href="?kind=${kind}&id=${b.id}"'>
-										<img src="/resources/${b.fileList[0].path}" class="thum" width="50px" height="50px">
+										<img src="/resources/upload/img/${b.member.id}/${b.fileList[0].name}" class="thum" width="50px" height="50px">
 										${b.title}
 										<span class="cmtcnt">(${b.cmtCnt})</span>
 									</a>
@@ -67,11 +68,9 @@ $(document).ready(function(){
 							</tr>
 						</c:forEach>
 					</c:if>
-				</thead>
-			<c:if test = "${totalCnt == 0}">
-				<td colspan=5>게시글이 없습니다.</td>
-			</c:if>
-
+					<c:if test = "${totalCnt == 0}">
+						<td colspan=5>게시글이 없습니다.</td>
+					</c:if>
 			</tbody>
 	</table>
 	</div>

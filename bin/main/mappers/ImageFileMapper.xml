@@ -1,38 +1,50 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="mz.mapper.FileUploadMapper">
+<mapper namespace="mz.mapper.ImageFileMapper">
 
 <!-- resultMap -->
 
-	<resultMap type="mz.dto.FileUpload" id="fileResult">
+	<resultMap type="mz.dto.ImageFile" id="fileResult">
 		<id column="img_id" property="id"></id>
 		<result column="brd_id" property="brdId"></result>
-		<result column="img_path" property="path"></result>
+		<result column="img_name" property="name"></result>
 		<result column="regdate" property="regDate"></result>
 		
 		<association column="mem_id" property="member" select="mz.mapper.MemberMapper.selectMemberById"></association>
 	</resultMap>
-
+	
+	
 <!-- sql -->
 
 	<sql id="selectSql">
-		select img_id, brd_id, mem_id, img_path, regdate from img_file
+		select img_id, brd_id, mem_id, img_name, regdate from img_file
 	</sql>
 
 <!-- select -->
 	<select id="selectFileByBrdId" resultMap="fileResult">
-			<include refid="selectSql"></include>
+		<include refid="selectSql"></include>
 			where brd_id = #{brdId}
 	</select>
 	
+	<select id="getFileByFileId" resultMap="fileResult">
+		<include refid="selectSql"></include>
+		where img_id = #{id}
+	</select>
+	
 <!-- insert -->	
-	<insert id="insertFile" parameterType="mz.dto.FileUpload">
-		insert into img_file(img_id, brd_id, mem_id,  img_path)
-			values(img_file_seq.nextval, #{brdId}, #{member.id}, #{path})
+	<insert id="insertFile" parameterType="mz.dto.ImageFile">
+		insert into img_file(img_id, brd_id, mem_id,  img_name)
+			values(img_file_seq.nextval, #{brdId}, #{member.id}, #{name})
 	</insert>
 	
 	<!-- insert시 지정할 board id -->
 	<select id="nextBrdId" resultType="int">
-		select max(brd_id) from board where bgr_id = 2
+		select nvl(max(brd_id), 0) from board where bgr_id = 2
 	</select>
+	
+<!-- delete -->
+
+	<delete id="deleteFile">
+		delete from img_file where img_id = #{id}
+	</delete>	
 </mapper>

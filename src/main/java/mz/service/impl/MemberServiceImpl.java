@@ -28,7 +28,7 @@ public class MemberServiceImpl implements MemberService {
 		
 		int num = Integer.parseInt(numStr);
 		member.setAuthKey(num);
-		log.info("?Éù?Ñ±?êú authKey : " + num);
+		log.info(" authKey : " + num);
 		int res = mapper.insertMember(member);
 		return res;
 	}
@@ -37,5 +37,14 @@ public class MemberServiceImpl implements MemberService {
 	public Member login(String id, String pwd) {
 		return mapper.login(id, pwd);
 	}
+
+	@Override
+	public String findMemberByCondition(Member member) {
+		String id = mapper.findMemberByCondition(member);
+		String maskingId = id.replaceAll("(?<=.{3}).", "*");
+		return maskingId;
+	}
+
+	
 
 }

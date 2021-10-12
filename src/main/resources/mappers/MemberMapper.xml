@@ -33,6 +33,7 @@
 		select sysdate from dual
 	</select>
 
+<!--  -->
 	<select id="login" resultType="mz.dto.Member">
 		select * from member where id = #{id} and pwd = #{pwd}
 	</select>
@@ -50,5 +51,14 @@
 		insert into member(id ,pwd, name, nickname, email, auth_key) 
 			values (#{id}, #{pwd}, #{name}, #{nickname}, #{email}, #{authKey})
 	</insert>
+	
+	<select id="findMemberByCondition" resultType="string">
+		<include refid="selectSql"></include>
+		<where>
+			 <if test="email != null">  email = #{email} </if>
+			 <if test="name != null"> and name = #{name} </if>
+			 <if test="id != null"> and id = #{id} </if>
+		</where>
+	</select>
 	
 </mapper>

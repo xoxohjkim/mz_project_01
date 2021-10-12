@@ -9,4 +9,6 @@ public interface MemberService {
 	
 	int registerMember(Member member);
 	Member login(String id, String pwd);
+	
+	String findMemberByCondition(Member member);
 }

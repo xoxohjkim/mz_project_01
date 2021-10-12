@@ -19,7 +19,7 @@ public interface MemberMapper {
 	int updateMember(Member member);
 	int deleteMember(Member member);
 	
-	
-	
+	String findMemberByCondition(Member member);
+
 	
 }

@@ -81,13 +81,13 @@ $(document).ready(function(){
 					processData: false,
 					contentType: false,
 					success: function (data) {
-						alert('ㅇㅇ')
+						window.location.href='/board?kind=${kind}&id=${board.id}';
 					},
 					error: function(request,status,error){
 						alert('에러' + request.status+request.responseText+error);
 						console.log(error);
 					}
-				 });
+				});
 	      	}
 		});
 
@@ -177,7 +177,7 @@ function preview(arr){
 		<span>등록된 파일</span>
 			<div>
 			 	 <c:forEach var="file" items="${fileList}" varStatus="status">
-					<img src="/resources/${file.path}" imgId="${file.id}" id="imgFile" class="imgFile" width="100">
+					<img src="/resources/upload/img/${board.member.id}/${file.name}" imgId="${file.id}" id="imgFile" class="imgFile" width="100">
 				</c:forEach>
 			</div>
 		</div>

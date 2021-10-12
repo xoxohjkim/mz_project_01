@@ -69,10 +69,13 @@ update board_comment set cmt_content = '수정수정' and regdate = sysdate
 where cmt_id = 1;
 
 select * from board where bgr_id = 2;
-select max(brd_id) from board where bgr_id = 2;
+select nvl(max(brd_id), 1) from board where bgr_id = 2;
 
-select img_id, brd_id, mem_id, img_path, regdate from img_file order by regdate;
+select img_id, brd_id, mem_id, img_name, regdate from img_file where brd_id = 2;
 
 
 select * from board_comment;
 select count(*) from board_comment where brd_id = 7;
+
+select id from member where email = 'admin@naver.com' and name = '김관리';
+select id from member where email = 'admin@naver.com' and id = 'admin';

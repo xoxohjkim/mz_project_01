@@ -81,7 +81,7 @@ create table img_file (
 	img_id NUMBER(12) NOT NULL, /*PK*/
 	brd_id NUMBER(12) NOT NULL, /* 게시판아이디 - fk */
 	mem_id varchar2(20) NOT NULL, /* 작성한 회원 아이디 - fk */
-	img_path varchar2(200) NOT NULL, /* 파일 경로 */
+	img_name varchar2(200) NOT NULL, /* 파일 경로 */
 	regdate DATE default sysdate NOT NULL /* 등록일 */
 )SEGMENT CREATION IMMEDIATE;
 

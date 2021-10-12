@@ -1,9 +1,12 @@
 package mz.config;
 
 import java.io.IOException;
+import java.net.URISyntaxException;
+import java.security.GeneralSecurityException;
 
 import javax.sql.DataSource;
 
+import org.apache.ibatis.ognl.ParseException;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.SqlSessionTemplate;
@@ -12,6 +15,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.PlatformTransactionManager;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import com.zaxxer.hikari.HikariConfig;
@@ -34,10 +39,10 @@ public class RootConfig {
 		hikari.setDriverClassName("net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
 		
 		//집
-		hikari.setJdbcUrl("jdbc:log4jdbc:oracle:thin:@localhost:1521:orcl?useUnicode=true&characterEncoding=UTF-8");
+		//hikari.setJdbcUrl("jdbc:log4jdbc:oracle:thin:@localhost:1521:orcl?useUnicode=true&characterEncoding=UTF-8");
 		
 		//ㄴ회사
-		//hikari.setJdbcUrl("jdbc:log4jdbc:oracle:thin:@localhost:1521:xe");
+		hikari.setJdbcUrl("jdbc:log4jdbc:oracle:thin:@localhost:1521:xe");
 		hikari.setUsername("hjkim");
 		hikari.setPassword("rootroot");
 		
@@ -62,4 +67,10 @@ public class RootConfig {
 	public SqlSessionTemplate sqlSession(SqlSessionFactory sqlSessionFactory) {
 		return new SqlSessionTemplate(sqlSessionFactory);
 	}
+	
+	@Bean 
+	public PlatformTransactionManager transactionManager() throws URISyntaxException, GeneralSecurityException, ParseException, IOException { 
+		return new DataSourceTransactionManager(dataSource()); 
+	}
+
 }

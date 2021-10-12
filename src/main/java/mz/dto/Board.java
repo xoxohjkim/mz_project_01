@@ -8,8 +8,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.ToString;
-import mz.mapper.BoardMapper;
-import mz.service.BoardService;
 
 @Getter
 @Setter
@@ -25,7 +23,7 @@ public class Board {
 	private String content;
 	private int hit;
 	private Date regDate;
-	private List<FileUpload> fileList;
+	private List<ImageFile> fileList;
 	private int cmtCnt;
 
 }
