@@ -49,13 +49,16 @@ public class LoginController {
 		if(member != null) {
 			//boolean pwMatch = passwordEncoder.matches(pwd, member.getPwd());
 			//log.info("pwMatches:" + pwMatch);
+			System.out.println(member.getAuthState());
+			if(member.getAuthState() == 0){
+				return 2;
+			}else {
 				session.setAttribute("loginUser", member);
 				log.info("로그인 완료");
 				return 1;
-			
+			}
 		} else {
 			log.info("로그인 불가");
-			request.setAttribute("msg", "아이디나 비밀번호를 확인해주세요.");
 			return 0;
 		}
 	

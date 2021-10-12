@@ -14,5 +14,8 @@ public interface MemberService {
 	Member login(String id, String pwd);
 	
 	String findMemberByCondition(Member member);
-	void sendMail(Member member);
+	void sendPwdMail(Member member);
+	
+	Member signUpConfirmById(String email, String authKey);
+
 }

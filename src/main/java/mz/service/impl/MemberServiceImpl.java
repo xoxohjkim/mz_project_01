@@ -1,5 +1,6 @@
 package mz.service.impl;
 
+import java.util.HashMap;
 import java.util.Random;
 import java.util.UUID;
 
@@ -24,6 +25,7 @@ public class MemberServiceImpl implements MemberService {
 	@Autowired
 	private MailService mailService;
 	
+	@Transactional
 	@Override
 	public int registerMember(Member member) {
 		Random rand = new Random();
@@ -33,13 +35,39 @@ public class MemberServiceImpl implements MemberService {
 			numStr += ran;
 		}
 		
-		int num = Integer.parseInt(numStr);
-		member.setAuthKey(num);
-		log.info(" authKey : " + num);
+		int authKey = Integer.parseInt(numStr);
+		member.setAuthKey(authKey);
+		log.info(" authKey : " + authKey);
 		int res = mapper.insertMember(member);
+		
+		log.info("메일 전송");
+		sendAuthMail(member.getEmail(), authKey);
+		
 		return res;
 	}
 
+
+	public void sendAuthMail(String email, int authKey) {
+		
+		Mail mail = new Mail();
+	    mail.setMailFrom("project.mz.hjkim@gmail.com");
+	    mail.setMailTo(email);
+	    mail.setMailSubject("[회원가입 이메일 인증]");
+	    mail.setMailContent(
+	    		new StringBuffer().append("<h1>[이메일 인증]</h1>")
+	            .append("<p>아래 링크를 클릭하시면 이메일 인증이 완료됩니다.</p>")
+	            .append("<a href='http://localhost:8080/confirm?email=")
+	            .append(email)
+	            .append("&authKey=")
+	            .append(authKey)
+	            .append("' target='_blenk'>이메일 인증 확인</a>")
+	            .toString());
+
+	    mailService.sendEmail(mail);
+		
+	}
+	
+	
 	@Override
 	public Member login(String id, String pwd) {
 		return mapper.login(id, pwd);
@@ -58,7 +86,7 @@ public class MemberServiceImpl implements MemberService {
 
 	@Transactional
 	@Override
-	public void sendMail(Member member) {
+	public void sendPwdMail(Member member) {
 		//1.임시비밀번호 생성
 		//2.멤버 비번 변경
 		//3.메일로 전송
@@ -84,6 +112,8 @@ public class MemberServiceImpl implements MemberService {
 	    mailService.sendEmail(mail);
 			
 	}
+	
+
 
 	@Override
 	public int updateMember(Member member) {
@@ -94,6 +124,14 @@ public class MemberServiceImpl implements MemberService {
 	public int deleteMember(Member member) {
 		return mapper.deleteMember(member);
 	}
+
+
+	@Override
+	public Member signUpConfirmById(String email, String authKey) {
+		return mapper.signUpConfirmById(email, authKey);
+	}
+
+	
 
 	
 

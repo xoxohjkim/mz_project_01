@@ -23,7 +23,7 @@ public class Member {
 	private String nickname;
 	private String email;
 	private int authKey;
-	private String authState;
+	private int authState;
 	private String useYn;
 	
 	@JsonFormat

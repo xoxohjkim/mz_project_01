@@ -10,16 +10,18 @@ public interface MemberMapper {
 	String getTime();
 	Member read(String userid);
 	
-	
 	List<Member> selectMemberAll();
 	Member selectMemberById(@Param("id")String id);
 	
+	Member signUpConfirmById(@Param("email")String email, @Param("authKey") String authKey);
 	Member login(@Param("id")String id, @Param("pwd")String pwd);
+	
 	int insertMember(Member member);
 	int updateMember(Member member);
 	int deleteMember(Member member);
 	
 	String findMemberByCondition(Member member);
+	
 
 	
 }

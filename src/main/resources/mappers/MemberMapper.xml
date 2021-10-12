@@ -34,8 +34,8 @@
 	</select>
 
 <!--  -->
-	<select id="login" resultType="mz.dto.Member">
-		select * from member where id = #{id} and pwd = #{pwd} and use_yn = 'y'
+	<select id="login" resultMap="memberResult">
+		select * from member where id = #{id} and pwd = #{pwd} and use_yn = 'y' 
 	</select>
 
 	<select id="selectMemberAll" resultMap="memberResult">
@@ -46,6 +46,12 @@
 		<include refid="selectSql"></include>
 		where id = #{id}	
 	</select>
+	
+	<select id="signUpConfirmById" resultMap="memberResult" parameterType="string">
+		<include refid="selectSql"></include>
+		where email = #{email} and auth_key = #{authKey}
+	</select>
+	
 	
 	<select id="findMemberByCondition" resultType="string">
 		select nvl( (select id from member
@@ -69,7 +75,7 @@
 			<if test = "nickname != null"> nickname = #{nickname}, </if>
 			<if test = "email != null"> email = #{email}, </if>
 			<if test = "authState != null"> auth_state = #{authState}, </if>
-			<if test = "useYn != null"> use_yn = #{use_yn} </if>
+			<if test = "useYn != null"> use_yn = #{useYn} </if>
 		</set>
 		where id = #{id}
 	</update>

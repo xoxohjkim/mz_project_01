@@ -1,9 +1,16 @@
 package mz.controller;
 
+import java.io.IOException;
+import java.io.PrintWriter;
+
+import javax.servlet.http.HttpServletResponse;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
@@ -33,7 +40,7 @@ public class MemberController {
 			}
 		}else if(keyword.equals("pwd")) {
 			if(id != null) {
-				memberService.sendMail(member);
+				memberService.sendPwdMail(member);
 			}else {
 				return "";
 			}
@@ -41,6 +48,35 @@ public class MemberController {
 		}
 	
 		return id;
+	}
 	
+	@GetMapping("/confirm")
+	public String signUpConfirm(@RequestParam String email, @RequestParam String authKey, HttpServletResponse response) throws IOException {
+		
+		Member member = memberService.signUpConfirmById(email, authKey);
+		
+		PrintWriter out = response.getWriter();
+		response.setContentType("text/html; charset=utf-8");
+		
+		if(member != null) {
+			member.setAuthState(1);
+			memberService.updateMember(member);
+			
+			out.println("<script language='javascript'>");
+			out.println("alert('가입 인증이 완료되었습니다.');");
+			out.println("location.href='/login'");
+			out.println("</script>");
+			out.flush();	
+			
+		} else {
+			out.println("<script language='javascript'>");
+			out.println("alert('잘못된 요청입니다.');");
+			out.println("location.href='/login'");
+			out.println("</script>");
+			out.flush();
+		}
+
+		
+		return "redirect:/";
 	}
 }

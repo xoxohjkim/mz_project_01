@@ -60,7 +60,7 @@ SELECT COUNT(*) FROM board where bgr_id = 1 and brd_title like '%안%';
 						regdate
 						FROM board where bgr_id = 1
 								and brd_title like '%안%'
-							ORDER BY REGDATE desc )B)A
+							ORDER BY REGDATE dessc )B)A
 			WHERE A.RNUM BETWEEN 11 AND 20
 				ORDER BY A.RNUM;
 				
@@ -82,3 +82,5 @@ select * from member;
 select * from board;
 update member set pwd = '1234';
 update board set brd_hit = brd_hit+1 where brd_id = 1;
+update member set email = 'test@teasst.com' where id = 'admin';
+select * from member where id = 'admin' and pwd = '1234' and use_yn = 'y';

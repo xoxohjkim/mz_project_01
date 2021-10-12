@@ -20,7 +20,9 @@ $(document).ready(function(){
 				console.log(res)
 				if(res == 1){
 					window.location.href='/main'
-				}else {
+				}else if(res == 2){
+					alert('이메일 인증을 완료해주세요.')
+				} else {
 					alert('아이디나 비밀번호가 맞지 않습니다.');
 				}
 			},
