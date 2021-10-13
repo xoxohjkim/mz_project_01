@@ -1,18 +1,19 @@
 
 /* USER */
 select * from member where id = 'test' and pwd = '1234';
-select id ,pwd, name, nickname, email, auth_key, auth_state, use_yn, regdate from member order by regdate;
+select id ,pwd, name, nickname, email, auth_key, auth_state, use_yn, regdate, salt from member order by regdate;
 -----사용자------
-insert into member values ('test', '1234', '김이름', '노인증', 'test00@naver.com', '123455', '0', 'y', sysdate);
+insert into member(id ,pwd, name, nickname, email, auth_key, auth_state, use_yn, regdate, salt ) 
+values ('test', '1234', '김이름', '노인증', 'test00@naver.com', '123455', '1', 'y', sysdate, 'saltkey');
 --인증안한사람
 
-insert into member values ('test11', '1234', '김이름', '인증닉', 'test22@naver.com', '123455', '1', 'y', sysdate);
 --인증한사람
 
 
 ------관리자------
-insert into member values ('admin', '1234', '김관리', '관리자', 'admin@naver.com', '123455', '1', 'y', sysdate);
-insert into member values ('mng', '1234', '김매니저', '매니저', 'mng@naver.com', '123455', '1', 'y', sysdate);
+insert into member(id ,pwd, name, nickname, email, auth_key, auth_state, use_yn, regdate, salt ) 
+values ('admin', '1234', '김관리', '관리자', 'admin@naver.com', '123455', '1', 'y', sysdate, 'saltkey');
+
 
 
 /* 게시판 종류 */

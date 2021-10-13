@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="mz.mapper.MypageMapper">
+	
+	<select id="pagingSelectMyBoardList" resultMap="mz.mapper.BoardMapper.boardResult">
+		SELECT A.*
+			FROM (SELECT ROWNUM AS RNUM, B.*
+				FROM (SELECT brd_id, 
+						bgr_id, 
+						mem_id, 
+						mem_nickname,
+						brd_title, 
+						brd_content, 
+						brd_hit, 
+						regdate 
+						FROM board where mem_id = #{id} 
+							ORDER BY REGDATE desc )B)A
+			WHERE A.RNUM BETWEEN #{cri.rowStart} AND #{cri.rowEnd}
+				ORDER BY A.RNUM
+	</select>
+	
+	<select id="countSelectMyBoardList" resultType="int">
+		SELECT count(a.brd_id)
+			FROM (SELECT ROWNUM AS RNUM, B.*
+				FROM (SELECT brd_id, 
+						bgr_id, 
+						mem_id, 
+						mem_nickname,
+						brd_title, 
+						brd_content, 
+						brd_hit, 
+						regdate
+				FROM board where mem_id = #{id}
+			)B)A
+	</select>
+	
+	
+	<select id="pagingSelectMyCmtList" resultMap="mz.mapper.CommentMapper.commentResult">
+		SELECT A.*
+			FROM (SELECT ROWNUM AS RNUM, B.*
+				FROM (
+			select distinct b.brd_id
+					from board b left join board_comment c on b.brd_id = c.brd_id
+					where c.mem_id = #{id}
+					order by b.brd_id desc )B)A
+			WHERE A.RNUM BETWEEN #{cri.rowStart} AND #{cri.rowEnd}
+				ORDER BY A.RNUM
+	</select>
+	
+	<select id="countSelectMyCmtList" resultType="int">
+		SELECT count(a.brd_id)
+			FROM (SELECT ROWNUM AS RNUM, B.*
+				FROM (
+				select distinct b.brd_id
+					from board b left join board_comment c on b.brd_id = c.brd_id
+					where c.mem_id = #{id}
+			)B)A
+	</select>
+	
+	
+</mapper>

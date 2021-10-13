@@ -36,8 +36,8 @@ $(document).ready(function(){
 			<colgroup>
 				<col width="5%">
 				<col width="50%%">
+				<col width="10%">
 				<col width="20%">
-				<col width="15%">
 				<col width="10%">
 			</colgroup>
 			<thead>
@@ -63,7 +63,7 @@ $(document).ready(function(){
 									</a>
 								</td>
 								<td>${b.member.nickname}</td>
-								<td>${b.regDate}</td>
+								<td><fmt:formatDate value="${b.regDate}" pattern="yyyy-MM-dd HH:mm"/></td>
 								<td>${b.hit}</td>
 							</tr>
 						</c:forEach>

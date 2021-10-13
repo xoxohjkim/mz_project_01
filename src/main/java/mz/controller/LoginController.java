@@ -17,7 +17,9 @@ import org.springframework.web.servlet.ModelAndView;
 
 import lombok.extern.log4j.Log4j;
 import mz.dto.Member;
+import mz.exceprtion.DuplicateMemberException;
 import mz.service.MemberService;
+import mz.util.SHA256Util;
 
 @Controller
 @Log4j
@@ -38,30 +40,34 @@ public class LoginController {
 	@ResponseBody
 	@PostMapping("/login")
 	public int loginCheck(HttpServletRequest request, @RequestBody Map<String, Object> data) {
-		ModelAndView mv = new ModelAndView();
+		
 		HttpSession session = request.getSession();
 		
 		String id = (String) data.get("id");
-		String pwd = (String) data.get("pwd");
-		System.out.println(id + " / " + pwd);
 		
+		String pwd = (String) data.get("pwd");
+		String salt = service.getSaltByMemberId(id);
+		pwd = SHA256Util.getEncrypt(pwd, salt);
+
 		Member member = service.login(id, pwd);
-		if(member != null) {
-			//boolean pwMatch = passwordEncoder.matches(pwd, member.getPwd());
-			//log.info("pwMatches:" + pwMatch);
-			System.out.println(member.getAuthState());
-			if(member.getAuthState() == 0){
-				return 2;
-			}else {
-				session.setAttribute("loginUser", member);
+
+		int res = 0;
+		
+		if( member != null ) {
+			//멤버가 존재하면 다시 암호화한 값을 비밀번호로 set
+			member.setPwd(pwd);
+			
+			if(member.getAuthState() == 0) {
+				log.info("이메일인증 필요");
+				res = 2;
+			}else if(member.getAuthState() == 1){
 				log.info("로그인 완료");
-				return 1;
+				session.setAttribute("loginUser", member);
+				res = 1;
 			}
-		} else {
-			log.info("로그인 불가");
-			return 0;
 		}
-	
+		return res;
+
 		
 	}
 	
@@ -70,24 +76,6 @@ public class LoginController {
 		session.removeAttribute("loginUser");
 		log.info("로그아웃");
 		return "redirect:/main";
-	}
-	
-	@GetMapping("/register")
-	public String register() {
-		log.info("회원가입 form");
-		return "register";
-	}
-	
-	@ResponseBody
-	@PostMapping("/register")
-	public int doRegister(Member member) {
-		System.out.println(member);
-			
-		//String password = passwordEncoder.encode(member.getPwd());
-		//member.setPwd(password);
-		//log.info("비번:" + password);
-		int res = service.registerMember(member);
-		return res;
 	}
 	
 	

@@ -3,7 +3,8 @@
 <mapper namespace="mz.mapper.MemberMapper">	
 
 	<sql id = "selectSql">
-		select id,
+		select lv,
+				id,
 				pwd, 
 				name, 
 				nickname, 
@@ -11,12 +12,14 @@
 				auth_key, 
 				auth_state, 
 				use_yn, 
-				regdate 
+				regdate,
+				salt
 			from member
 	</sql>
 	
 	<resultMap type="mz.dto.Member" id="memberResult">
 		<id column="id" property="id"/>
+		<result column="lv" property="lv"/>
 		<result column="pwd" property="pwd" />
 		<result column="name" property="name" />
 		<result column="nickname" property="nickname" />
@@ -25,6 +28,7 @@
 		<result column="auth_state" property="authState" />
 		<result column="use_yn" property="useYn" />
 		<result column="regdate" property="regDate" />
+		<result column="salt" property="salt"/>
 	</resultMap>
 		
 	
@@ -52,6 +56,10 @@
 		where email = #{email} and auth_key = #{authKey}
 	</select>
 	
+	<select id="getSaltByMemberId" resultType="string">
+		select salt from member where id = #{id}
+	</select>
+	
 	
 	<select id="findMemberByCondition" resultType="string">
 		select nvl( (select id from member
@@ -63,8 +71,8 @@
 	</select>
 	
 	<insert id="insertMember"  parameterType="mz.dto.Member">
-		insert into member(id ,pwd, name, nickname, email, auth_key) 
-			values (#{id}, #{pwd}, #{name}, #{nickname}, #{email}, #{authKey})
+		insert into member(id ,pwd, name, nickname, email, auth_key, salt) 
+			values (#{id}, #{pwd}, #{name}, #{nickname}, #{email}, #{authKey}, #{salt})
 	</insert>
 	
 	<update id="updateMember">
@@ -75,7 +83,8 @@
 			<if test = "nickname != null"> nickname = #{nickname}, </if>
 			<if test = "email != null"> email = #{email}, </if>
 			<if test = "authState != null"> auth_state = #{authState}, </if>
-			<if test = "useYn != null"> use_yn = #{useYn} </if>
+			<if test = "useYn != null"> use_yn = #{useYn}, </if>
+			<if test = "salt != null"> salt = #{salt} </if>
 		</set>
 		where id = #{id}
 	</update>
@@ -83,4 +92,18 @@
 	<delete id="deleteMember">
 		update member set use_yn = 'n' where id = #{id}
 	</delete>
+	
+	<select id="infoCheck" resultType="int">
+		select count(*) from member 
+		where 
+			<if test="cond !=null">
+                <choose>
+                  <when test=" cond == 'id'">id</when>
+                  <when test=" cond == 'email'">email</when>
+                  <when test=" cond == 'nickname'">nickname</when>
+                </choose>
+            </if>
+			 = #{key}
+	</select>
+	
 </mapper>

@@ -11,4 +11,5 @@ public interface ImageFileMapper {
 	int nextBrdId();
 	List<ImageFile> selectFileByBrdId(int brdId);
 	ImageFile getFileByFileId(int id);
+	List<ImageFile> selectFileByMemId(String id);
 }

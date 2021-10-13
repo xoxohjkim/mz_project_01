@@ -27,7 +27,7 @@
 	<form name="loginForm" method="post" action="/doLogin" autocomplete="off" id="loginForm">
 		<div>
 			${loginUser.nickname}(${loginUser.id})님
-			<a href="<c:url value="/mypage" />"> 마이페이지</a>
+			<a href="<c:url value="/mypage/boardList" />"> 마이페이지</a>
 			<a href="<c:url value="/logout" />"> 로그아웃</a>
 		</div>
 	</form>

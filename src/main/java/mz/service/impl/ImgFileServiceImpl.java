@@ -200,4 +200,9 @@ public class ImgFileServiceImpl implements ImgFileService {
 		
 		return res;
 	}
+
+	@Override
+	public List<ImageFile> selectFileByMemId(String id) {
+		return mapper.selectFileByMemId(id);
+	}
 }

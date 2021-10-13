@@ -31,8 +31,8 @@ $(document).ready(function(){
 	<table id="gnr_board_list">
 			<colgroup>
 				<col width="5%">
-				<col width="45%%">
-				<col width="20%">
+				<col width="50%%">
+				<col width="10%">
 				<col width="20%">
 				<col width="10%">
 			</colgroup>
@@ -58,7 +58,7 @@ $(document).ready(function(){
 								<span class="cmtcnt">(${b.cmtCnt})</span>
 							</td>
 							<td>${b.member.nickname}</td>
-							<td>${b.regDate}</td>
+							<td><fmt:formatDate value="${b.regDate}" pattern="yyyy-MM-dd HH:mm"/></td>
 							<td>${b.hit}</td>
 					
 						</tr>
@@ -98,22 +98,4 @@ $(document).ready(function(){
 					    <p><a href="<%=request.getContextPath()%>board${pageMaker.makeQuery(pageMaker.endPage + 1)}&kind=${kind}&cond=${cond}&keyword=${keyword}">다음</a></p>
 					  </c:if>
 			</div>
-		<%-- 
-			<div>
-			<c:if test = "${cond == null}"> 
-				    <c:if test="${pageMaker.prev}">
-				    	<p><a href="board?${pageMaker.makeQuery(pageMaker.startPage - 1)}&kind=${kind}">이전</a></p>
-				    </c:if> 
-					<ul>
-					
-					  <c:forEach begin="${pageMaker.startPage}" end="${pageMaker.endPage}" var="idx">
-					  	<li><a href="<%=request.getContextPath()%>/board${pageMaker.makeQuery(idx)}&kind=${kind}">${idx}</a></li>
-					  </c:forEach>
-					</ul>
-					
-					  <c:if test="${pageMaker.next && pageMaker.endPage > 0}">
-					  	
-					    <p><a href="<%=request.getContextPath()%>board${pageMaker.makeQuery(pageMaker.endPage + 1)}&kind=${kind}">다음</a></p>
-					  </c:if>
-				</c:if>
-			</div> --%>
+		

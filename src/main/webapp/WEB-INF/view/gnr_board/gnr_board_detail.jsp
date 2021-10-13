@@ -20,8 +20,12 @@ $(document).ready(function(){
 				var str = "";
 				$.each(data, function(i){
 					console.log(data)
-					str += "<tr>"
-					str += "<td>"+ data[i].member.nickname + data[i].id + "</td>"
+					str += "<tr "
+						if(data[i].member.id == user){
+							str += "style='background-color:gray'"
+						} 
+					str += ">"
+					str += "<td>"+ data[i].member.nickname + "</td>"
 					str += "<td><span id='cmtContent' bid=${board.id}} cid='" + data[i].id + "'>" + data[i].content + "</span>"
 					if(data[i].member.id == user){
 						str += "<input type='button' value='수정' id='cmtModifyBtn' cid='" + data[i].id + "'>"

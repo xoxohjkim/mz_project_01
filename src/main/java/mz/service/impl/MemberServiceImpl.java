@@ -1,6 +1,5 @@
 package mz.service.impl;
 
-import java.util.HashMap;
 import java.util.Random;
 import java.util.UUID;
 
@@ -129,6 +128,18 @@ public class MemberServiceImpl implements MemberService {
 	@Override
 	public Member signUpConfirmById(String email, String authKey) {
 		return mapper.signUpConfirmById(email, authKey);
+	}
+
+
+	@Override
+	public String getSaltByMemberId(String id) {
+		return mapper.getSaltByMemberId(id);
+	}
+
+
+	@Override
+	public int infoCheck(String condition, String keyword) {
+		return mapper.infoCheck(condition, keyword);
 	}
 
 	

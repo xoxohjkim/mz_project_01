@@ -8,20 +8,24 @@ DROP TABLE img_file CASCADE CONSTRAINTS;
 
 /* 회원 */
 create table member (
+	lv NUMBER(1) default 2 not null,
 	id varchar2(20) NOT NULL, /* 아이디 */
-	pwd varchar2(255) NOT NULL, /* 비밀번호 */
+	pwd varchar2(400) NOT NULL, /* 비밀번호 */
 	name varchar(36) NOT NULL, /* 이름 */
 	nickname varchar(36) NOT NULL, /* 닉네임 */
 	email varchar(36) NOT NULL, /* 이메일 */
 	auth_key NUMBER(10) NOT NULL, /* 인증키 */
 	auth_state char(1) DEFAULT '0' NOT NULL, /* 인증상태 */
 	use_yn char(1) DEFAULT 'y' NOT NULL, /* 회원탈퇴유무 */
-	regdate date DEFAULT sysdate NOT NULL /* 가입일 */
+	regdate date DEFAULT sysdate NOT NULL, /* 가입일 */
+	salt varchar(300) not null
 )SEGMENT CREATION IMMEDIATE;
 
 ALTER TABLE MEMBER ADD CONSTRAINT PK_MEMBER PRIMARY KEY (id);
 ALTER TABLE MEMBER ADD constraint uk_member_email unique (EMAIL);
 ALTER TABLE MEMBER ADD constraint uk_member_nick unique (nickname);
+
+select * from member;
 
 /* 게시판 종류 */
 create table board_group (

@@ -17,5 +17,8 @@ public interface MemberService {
 	void sendPwdMail(Member member);
 	
 	Member signUpConfirmById(String email, String authKey);
+	String getSaltByMemberId(String id);
+	
+	int infoCheck(String condition, String keyword);
 
 }

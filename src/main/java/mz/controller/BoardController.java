@@ -74,6 +74,8 @@ public class BoardController {
 			
 			Board board = boardService.selectBoardById(Integer.parseInt(id));
 			list = boardService.selectBoardByGroup(bg.getId());
+			
+			//조회수
 			boardService.updateBoardHit(board);
 			
 			if(kind.equals("img")) {

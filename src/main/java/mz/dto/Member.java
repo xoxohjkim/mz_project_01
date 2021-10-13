@@ -17,6 +17,7 @@ import lombok.ToString;
 @AllArgsConstructor
 public class Member {
 	
+	private int lv;
 	private String id;
 	private String pwd;
 	private String name;
@@ -25,7 +26,9 @@ public class Member {
 	private int authKey;
 	private int authState;
 	private String useYn;
-	
 	@JsonFormat
 	private Date regDate;
+	private String salt;
+	
+	
 }

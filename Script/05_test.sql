@@ -84,3 +84,76 @@ update member set pwd = '1234';
 update board set brd_hit = brd_hit+1 where brd_id = 1;
 update member set email = 'test@teasst.com' where id = 'admin';
 select * from member where id = 'admin' and pwd = '1234' and use_yn = 'y';
+
+update member set auth_state = 0 where id = 'test2'
+update member set pwd = '1234' where id = 'test2'
+
+
+		SELECT A.*
+			FROM (SELECT ROWNUM AS RNUM, B.*
+				FROM (SELECT brd_id, 
+						bgr_id, 
+						mem_id, 
+						mem_nickname,
+						brd_title, 
+						brd_content, 
+						brd_hit, 
+						regdate 
+						FROM board where mem_id = 'test2'
+							ORDER BY REGDATE desc )B)A
+			WHERE A.RNUM BETWEEN 1 AND 10
+				ORDER BY A.RNUM;
+
+	
+
+		SELECT count(a.brd_id)
+			FROM (SELECT ROWNUM AS RNUM, B.*
+				FROM (SELECT brd_id, 
+						bgr_id, 
+						mem_id, 
+						mem_nickname,
+						brd_title, 
+						brd_content, 
+						brd_hit, 
+						regdate
+				FROM board where mem_id = 'test2'
+			)B)A;
+			
+select distinct b.brd_id
+from board b left join board_comment c on b.brd_id = c.brd_id
+where c.mem_id = 'test4'
+order by b.brd_id desc;
+
+
+select distinct b.brd_id, b.brd_title, b.mem_id, c.mem_id
+from board_comment c 
+left join board b on c.brd_id = b.brd_id 
+where c.brd_id = b.brd_id and c.mem_id = 'test4'
+order by b.brd_id desc;
+
+SELECT A.*
+			FROM (SELECT ROWNUM AS RNUM, B.*
+				FROM (
+			select distinct b.brd_id
+					from board b left join board_comment c on b.brd_id = c.brd_id
+					where c.mem_id = 'test4'
+					order by b.brd_id desc )B)A
+			WHERE A.RNUM BETWEEN 1 AND 10
+				ORDER BY A.RNUM
+				
+SELECT count(a.brd_id)
+			FROM (SELECT ROWNUM AS RNUM, B.*
+				FROM (
+				select distinct b.brd_id
+					from board b left join board_comment c on b.brd_id = c.brd_id
+					where c.mem_id = 'test4'
+			)B)A
+
+SELECT A.*    
+FROM (
+SELECT ROWNUM AS RNUM, B.*     
+FROM (    
+select distinct b.brd_id from board b left join board_comment c on b.brd_id = c.brd_id      where c.mem_id = 'test2'     order by b.brd_id desc )B)A    WHERE A.RNUM BETWEEN 1 AND 10     ORDER BY A.RNUM;
+
+select * from member;
+select count(*) from member where email = 'chini91@naver.com'

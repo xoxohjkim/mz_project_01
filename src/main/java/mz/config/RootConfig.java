@@ -41,10 +41,10 @@ public class RootConfig {
 		hikari.setDriverClassName("net.sf.log4jdbc.sql.jdbcapi.DriverSpy");
 		
 		//집
-		hikari.setJdbcUrl("jdbc:log4jdbc:oracle:thin:@localhost:1521:orcl?useUnicode=true&characterEncoding=UTF-8");
+		//hikari.setJdbcUrl("jdbc:log4jdbc:oracle:thin:@localhost:1521:orcl?useUnicode=true&characterEncoding=UTF-8");
 		
 		//ㄴ회사
-		//hikari.setJdbcUrl("jdbc:log4jdbc:oracle:thin:@localhost:1521:xe");
+		hikari.setJdbcUrl("jdbc:log4jdbc:oracle:thin:@localhost:1521:xe");
 		hikari.setUsername("hjkim");
 		hikari.setPassword("rootroot");
 		

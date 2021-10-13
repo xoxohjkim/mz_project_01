@@ -7,6 +7,7 @@ import org.apache.ibatis.annotations.Param;
 import mz.dto.Member;
 
 public interface MemberMapper {
+	//test
 	String getTime();
 	Member read(String userid);
 	
@@ -21,7 +22,9 @@ public interface MemberMapper {
 	int deleteMember(Member member);
 	
 	String findMemberByCondition(Member member);
+	String getSaltByMemberId(String id);
 	
+	int infoCheck(@Param("cond")String condition, @Param("key")String keyword);
 
 	
 }

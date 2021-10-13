@@ -4,9 +4,12 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +21,7 @@ import lombok.extern.log4j.Log4j;
 import mz.dto.Member;
 import mz.service.MemberService;
 import mz.service.impl.MemberServiceImpl;
+import mz.util.SHA256Util;
 
 @Controller
 @Log4j
@@ -25,6 +29,33 @@ public class MemberController {
 	
 	@Autowired
 	private MemberService memberService;
+	
+	@Autowired
+	PasswordEncoder passwordEncoder;
+	
+	
+	@GetMapping("/register")
+	public String register() {
+		log.info("회원가입 form");
+		return "register";
+	}
+	
+	@ResponseBody
+	@PostMapping("/register")
+	public int doRegister(Member member) {
+		System.out.println(member);
+			
+		String salt = SHA256Util.generateSalt();
+		member.setSalt(salt);
+		
+		String password = member.getPwd();
+		password = SHA256Util.getEncrypt(password, salt);
+		member.setPwd(password);
+		
+		int res = memberService.registerMember(member);
+		return res;
+	}
+	
 	
 	@ResponseBody
 	@PostMapping("/find/{keyword}")
@@ -51,32 +82,20 @@ public class MemberController {
 	}
 	
 	@GetMapping("/confirm")
-	public String signUpConfirm(@RequestParam String email, @RequestParam String authKey, HttpServletResponse response) throws IOException {
-		
+	public String signUpConfirm(Model model, @RequestParam String email, @RequestParam String authKey, HttpSession session) throws Exception {
+		log.info("이메일인증 확인");
 		Member member = memberService.signUpConfirmById(email, authKey);
-		
-		PrintWriter out = response.getWriter();
-		response.setContentType("text/html; charset=utf-8");
 		
 		if(member != null) {
 			member.setAuthState(1);
 			memberService.updateMember(member);
 			
-			out.println("<script language='javascript'>");
-			out.println("alert('가입 인증이 완료되었습니다.');");
-			out.println("location.href='/login'");
-			out.println("</script>");
-			out.flush();	
+			model.addAttribute("msg", "가입 인증이 완료되었습니다.");
 			
 		} else {
-			out.println("<script language='javascript'>");
-			out.println("alert('잘못된 요청입니다.');");
-			out.println("location.href='/login'");
-			out.println("</script>");
-			out.flush();
+			model.addAttribute("msg", "잘못된 요청입니다.");
 		}
-
 		
-		return "redirect:/";
+		return "redirect";
 	}
 }
