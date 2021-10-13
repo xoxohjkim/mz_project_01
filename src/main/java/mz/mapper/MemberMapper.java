@@ -25,6 +25,5 @@ public interface MemberMapper {
 	String getSaltByMemberId(String id);
 	
 	int infoCheck(@Param("cond")String condition, @Param("key")String keyword);
-
 	
 }

@@ -27,6 +27,7 @@ import mz.service.CommentService;
 import mz.service.ImgFileService;
 import mz.service.MemberService;
 import mz.service.MypageService;
+import mz.util.SHA256Util;
 
 
 @Controller
@@ -127,6 +128,18 @@ public class MypageController {
 		int res = memberService.infoCheck(condition, keyword);
 		log.info(memberService.infoCheck(condition, keyword));
 		//res = 1이면 존재, 0이면 없음
+		return res;
+	}
+	
+	@ResponseBody
+	@PostMapping("/updateInfo")
+	public int updateMemberInfo(Member member, HttpSession session) {
+		log.info("member - update");
+		int res = memberService.updateMember(member);
+		
+		//session 재설정
+		session.setAttribute("loginUser", member);
+		
 		return res;
 	}
 	

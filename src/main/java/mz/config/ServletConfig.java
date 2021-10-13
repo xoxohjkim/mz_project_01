@@ -33,7 +33,7 @@ public class ServletConfig implements WebMvcConfigurer {
 	public void addViewControllers(ViewControllerRegistry registry) {
 		registry.addViewController("/").setViewName("gnr_board/gnr_board_list");
 		registry.addViewController("find_idpw").setViewName("find_idpw");
-		registry.addViewController("/mypage/myInfo").setViewName("mypage/mypage_member_info");
+		registry.addViewController("mypage/myInfo").setViewName("mypage/mypage_member_info");
 		
 		
 	}

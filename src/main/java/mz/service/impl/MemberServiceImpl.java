@@ -13,6 +13,7 @@ import mz.dto.Member;
 import mz.mapper.MemberMapper;
 import mz.service.MailService;
 import mz.service.MemberService;
+import mz.util.SHA256Util;
 
 @Service
 @Log4j
@@ -116,6 +117,17 @@ public class MemberServiceImpl implements MemberService {
 
 	@Override
 	public int updateMember(Member member) {
+		
+		System.out.println("member:" + member);
+		String pwd = member.getPwd();
+		String salt = getSaltByMemberId(member.getId());
+		
+		pwd = SHA256Util.getEncrypt(pwd, salt);
+		member.setPwd(pwd);
+		
+		//auth_state 어떻게 처리할 지 고민해봐야함
+		member.setAuthState(1);
+		
 		return mapper.updateMember(member);
 	}
 
@@ -142,7 +154,7 @@ public class MemberServiceImpl implements MemberService {
 		return mapper.infoCheck(condition, keyword);
 	}
 
-	
+
 
 	
 

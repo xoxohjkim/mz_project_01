@@ -42,7 +42,7 @@ $(document).ready(function(){
 	
 	<form name="loginForm" method="post" action="/doLogin" autocomplete="off" id="loginForm">
 		<div>
-			<input type="text" id="id" name="id" value="test2" required >
+			<input type="text" id="id" name="id" value="test" required >
 		</div>
 		<div>
 			<input type="password" id="pwd" name="pwd" value="1234" required value="1234">

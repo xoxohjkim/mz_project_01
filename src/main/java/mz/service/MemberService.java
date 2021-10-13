@@ -21,4 +21,5 @@ public interface MemberService {
 	
 	int infoCheck(String condition, String keyword);
 
+
 }
