@@ -115,6 +115,12 @@ public class MypageController {
 		mv.setViewName("/mypage/mypage_comment_list");
 		return mv;
 	}
+	
+	
+	@GetMapping("/mypage/myInfo")
+	public String myInfo() {
+		return "/mypage/mypage_member_info";
+	}
 
 	@ResponseBody	
 	@PostMapping("/infoConfirm")
@@ -142,6 +148,8 @@ public class MypageController {
 		
 		return res;
 	}
+	
+
 	
 
 }

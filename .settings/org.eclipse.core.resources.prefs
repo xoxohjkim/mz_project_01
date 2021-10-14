@@ -1,4 +1,6 @@
 eclipse.preferences.version=1
 encoding//src/main/java/mz/config=UTF-8
 encoding//src/main/java/mz/config/RootConfig.java=UTF-8
+encoding//src/main/webapp/WEB-INF/view/admin/include/header.jsp=UTF-8
+encoding//src/main/webapp/WEB-INF/view/admin/member_list.jsp=UTF-8
 encoding/<project>=UTF-8
